@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/strngbad.cpp
+cstring
+-
+strngbad.h
+/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/strngbad.h
+
+/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/strngbad.h
+iostream
+-
+
+/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/vegnews.cpp
+iostream
+-
+strngbad.h
+/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/strngbad.h
+
