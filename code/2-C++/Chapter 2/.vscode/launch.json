@@ -6,10 +6,10 @@
     "configurations": [
 
         {
-            "name": "(gdb) convert",
+            "name": "(gdb) myfirst",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/convert",
+            "program": "${workspaceFolder}/build/myfirst",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
@@ -22,10 +22,10 @@
             ]
         },
         {
-            "name": "(gdb) project02",
+            "name": "(gdb) convert",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/project02",
+            "program": "${workspaceFolder}/build/myfirst",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
