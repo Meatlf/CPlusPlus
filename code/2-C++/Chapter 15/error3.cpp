@@ -1,5 +1,7 @@
 // error3.cpp -- using an exception
 #include <iostream>
+
+// 计算2个数的调和平均数
 double hmean(double a, double b);
 
 int main()

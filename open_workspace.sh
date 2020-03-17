@@ -1,2 +1,3 @@
-code ./code/.
-typora ./note/.
+code ./code/. &
+typora ./note/. &
+FoxitReader ./reference/*.pdf 
