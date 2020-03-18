@@ -22,10 +22,10 @@
             ]
         },
         {
-            "name": "(gdb) project02",
+            "name": "(gdb) strings",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/project02",
+            "program": "${workspaceFolder}/build/strings",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
@@ -37,6 +37,108 @@
                 }
             ]
         },
+        {
+            "name": "(gdb) instr1",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/instr1",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+        {
+            "name": "(gdb) instr2",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/instr2",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+        {
+            "name": "(gdb) strtype1",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/strtype1",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+        {
+            "name": "(gdb) exercise02",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/exercise02",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+        {
+            "name": "(gdb) exercise04",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/exercise04",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+        {
+            "name": "(gdb) strtype4",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/strtype4",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
         {
             "name": "g++ - Build and debug active file",
             "type": "cppdbg",
