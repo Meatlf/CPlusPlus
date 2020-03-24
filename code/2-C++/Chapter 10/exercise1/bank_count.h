@@ -12,13 +12,11 @@ private:
     string name_;
     string count_;
     double deposit_;
-    double draw_;
 public:
-    BankCount (const string & name,
-                       const string & count, double deposit, double draw);
+    BankCount (const string & name, const string & count);
     void display();
     void deposit(double deposit);
-    double draw();
+    void draw(double draw);
     ~BankCount();
 };
 #endif
