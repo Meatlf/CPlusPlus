@@ -23,6 +23,9 @@ public:
 class Classic : public Cd
 {
 private:
-    char name[4];
+    char name_[4];
+public:
+    Classic(char* name, char* s1, char* s2,  int n, double x);
+    Classic(char* name, const Cd & cd);
 };
 #endif
