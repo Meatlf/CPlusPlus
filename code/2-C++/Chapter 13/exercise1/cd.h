@@ -1,4 +1,4 @@
-// tabtenn0.h -- a table-tennis base class
+// cd.h -- 
 #ifndef CD_H_
 #define CD_H_
 #include <string>
@@ -15,8 +15,8 @@ public:
     Cd (char * s1, char * s2, int n, double x);
     Cd (const Cd & d);
     Cd ();
-    ~Cd();
-    void Report() const;
+    virtual ~Cd();
+    virtual void Report() const;
     Cd & operator=(const Cd & d);
 };
 
@@ -27,5 +27,6 @@ private:
 public:
     Classic(char* name, char* s1, char* s2,  int n, double x);
     Classic(char* name, const Cd & cd);
+    Classic();
 };
 #endif

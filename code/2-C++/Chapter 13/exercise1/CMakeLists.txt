@@ -1,2 +1,2 @@
-aux_source_directory(. DIR_LIB_PROJECT0_SRCS)
-add_library(project0 ${DIR_LIB_PROJECT0_SRCS})
+aux_source_directory(. DIR_LIB_EXERCISE0_SRCS)
+add_library(exercise0 ${DIR_LIB_EXERCISE0_SRCS})
