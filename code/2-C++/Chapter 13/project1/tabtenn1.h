@@ -3,6 +3,7 @@
 #define TABTENN1_H_
 #include <string>
 using std::string;
+
 // simple base class
 class TableTennisPlayer
 {

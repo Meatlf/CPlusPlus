@@ -168,18 +168,18 @@ RatedPlayer::RatedPlayer(unsigned int r, const TableTennisPlayer & tp)
 
 **A**：
 
-1）派生类对象可以使用基类的方法，条件是方法不是私有的：
+1）**派生类对象可以使用基类的方法，条件是方法不是私有的**：
 
 ```c++
 RatedPlayer rplayer1(1140, "Mallory", "Duck", true);
 rpalyer1.Name();	// derived object uses base method
 ```
 
-2）基类指针（或引用）可以在不进行显示类型转换的情况下指向（引用）派生类对象：
+2）**基类指针（或引用）可以在不进行显示类型转换的情况下指向（引用）派生类对象**：
 
 ```c++
-RatedPlayer rplayer1(1140, "Mallory", "Duck", true);
-TableTennisPlayer & rt = replayer;
+RatedPlayer rplayer1(1140, "Mallory", "Duck", true);     // 派生类
+TableTennisPlayer & rt = replayer;											// 基类
 TableTennisPlayer * pt = &rplayer;
 rt.Name();		// invoke Name() with reference
 pt->Name();		// invoke Name() with pointer

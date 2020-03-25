@@ -1,8 +1,11 @@
 // cd.h -- 
 #ifndef CD_H_
 #define CD_H_
+#include <iostream>
 #include <string>
 using std::string;
+using namespace std;
+
 // simple base class
 class Cd
 {
@@ -28,5 +31,7 @@ public:
     Classic(char* name, char* s1, char* s2,  int n, double x);
     Classic(char* name, const Cd & cd);
     Classic();
+    virtual ~Classic();
+    virtual void Report() const;
 };
 #endif

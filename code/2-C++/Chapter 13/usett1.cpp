@@ -6,6 +6,7 @@ int main ( void )
 {
     using std::cout;
     using std::endl;
+
     TableTennisPlayer player1("Tara", "Boomdea", false);
     RatedPlayer rplayer1(1140, "Mallory", "Duck", true);
     rplayer1.Name();          // derived object uses base method
@@ -26,6 +27,13 @@ int main ( void )
     cout << "Name: ";
     rplayer2.Name();
     cout << "; Rating: " << rplayer2.Rating() << endl;
+
+    TableTennisPlayer & rt = rplayer1;
+    TableTennisPlayer * pt = &rplayer1;
+    rt.Name();
+    cout << endl;
+    pt->Name();
+    cout << endl;
     // std::cin.get();
     return 0;
 }
