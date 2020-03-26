@@ -2,7 +2,9 @@
 #ifndef BRASS_H_
 #define BRASS_H_
 #include <string>
+
 // Brass Account Class
+// 基本支票账户
 class Brass
 {
 private:
@@ -20,6 +22,7 @@ public:
 };
 
 //Brass Plus Account Class
+//具有透支保护特性的支票帐号
 class BrassPlus : public Brass
 {
 private:

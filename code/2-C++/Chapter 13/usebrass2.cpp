@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include "brass.h"
-const int CLIENTS = 4;
+const int CLIENTS = 2;
 
 int main()
 {
