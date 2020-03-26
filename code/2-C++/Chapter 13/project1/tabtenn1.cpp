@@ -22,3 +22,14 @@ RatedPlayer::RatedPlayer(unsigned int r, const TableTennisPlayer & tp)
     : TableTennisPlayer(tp), rating(r)
 {
 }
+
+void Show(const TableTennisPlayer & rt)
+{
+    cout << "Name: ";
+    rt.Name();
+    cout<<"\nTable: ";
+    if(rt.HasTable())
+        cout << "yes\n";
+    else
+        cout<<"no\n";    
+}

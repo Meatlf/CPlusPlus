@@ -3,6 +3,7 @@
 #define TABTENN1_H_
 #include <string>
 using std::string;
+using namespace std;
 
 // simple base class
 class TableTennisPlayer
@@ -31,5 +32,7 @@ public:
     unsigned int Rating() const { return rating; }
     void ResetRating (unsigned int r) {rating = r;}
 };
+
+void Show(const TableTennisPlayer & rt);
 
 #endif
