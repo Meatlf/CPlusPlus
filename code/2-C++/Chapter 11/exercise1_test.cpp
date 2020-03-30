@@ -1,43 +1,65 @@
-// useWalker1.cpp -- using the second draft of the Walker class
-// compile useWalker1.cpp and myWalker1.cpp together
+// randwalk.cpp -- using the Vector class
+// compile with the vect.cpp file
 #include <iostream>
-#include "walker.h"
-
+#include <cstdlib>      // rand(), srand() prototypes
+#include <ctime>        // time() prototype
+#include<fstream>
+#include<string>
+#include "vect.h"
 int main()
 {
-    using std::cout;
-    using std::endl;
-    Walker planning;
-    Walker coding(2, 40);
-    Walker fixing(5, 55);
-    Walker total;
+    using namespace std;
+    using VECTOR::Vector;
+    srand(time(0));     // seed random-number generator
+    double direction;
+    Vector step;
+    Vector result(0.0, 0.0);
+    unsigned long steps = 0;
+    double target;
+    double dstep;
+    cout << "Enter target distance (q to quit): ";
 
-    planning.Show();
-    cout << endl;
- 
-    cout << "coding Walker = ";
-    coding.Show();
-    cout << endl;
+    string filename("exercise1_test.txt");
     
-    cout << "fixing Walker = ";
-    fixing.Show();
-    cout << endl;
+    // cin>>filename;
 
-    total = coding + fixing;
-    // operator notation
-    cout << "coding + fixing = ";
-    total.Show();
-    cout << endl;
+    ofstream fout(filename.c_str());
+    fout<<"Target Distance: ";
+    cin>>target;
+    fout<<target;
+    fout<<"Step Size: ";
+    cin>>dstep;
+    fout<<dstep;
+    // while (cin >> target)
+    // {
+    //     cout << "Enter step length: ";
+    //     if (!(cin >> dstep))
+    //         break;
 
-    Walker morefixing(3, 28);
-    cout << "more fixing Walker = ";
-    morefixing.Show();
-    cout << endl;
-    total = morefixing.operator+(total);
-    // function notation
-    cout << "morefixing.operator+(total) = ";
-    total.Show();
-    cout << endl;
-    // std::cin.get();
-    return 0;
+    //     while (result.magval() < target)
+    //     {
+    //         direction = rand() % 360;
+    //         step.reset(dstep, direction);
+    //         result = result + step;
+    //         steps++;
+    //     }
+    //     cout << "After " << steps << " steps, the subject "
+    //         "has the following location:\n";
+    //     cout << result << endl;
+    //     result.polar_mode();
+    //     cout << " or\n" << result << endl;
+    //     cout << "Average outward distance per step = "
+    //         << result.magval()/steps << endl;
+    //     steps = 0;
+    //     result.reset(0.0, 0.0);
+    //     cout << "Enter target distance (q to quit): ";
+    // }
+    cout << "Bye!\n";
+/* keep window open
+    cin.clear();
+    while (cin.get() != '\n')
+        continue;
+    cin.get();
+*/
+    return 0; 
 }
