@@ -1,4 +1,4 @@
-// randwalk.cpp -- using the Vector class
+// exercise1_test.cpp -- using the Vector class
 // compile with the vect.cpp file
 #include <iostream>
 #include <cstdlib>      // rand(), srand() prototypes
@@ -15,45 +15,34 @@ int main()
     Vector step;
     Vector result(0.0, 0.0);
     unsigned long steps = 0;
-    double target;
-    double dstep;
-    cout << "Enter target distance (q to quit): ";
+    double target = 100;
+    double dstep = 20;
 
     string filename("exercise1_test.txt");
     
-    // cin>>filename;
-
     ofstream fout(filename.c_str());
-    fout<<"Target Distance: ";
-    cin>>target;
-    fout<<target;
-    fout<<"Step Size: ";
-    cin>>dstep;
-    fout<<dstep;
-    // while (cin >> target)
-    // {
-    //     cout << "Enter step length: ";
-    //     if (!(cin >> dstep))
-    //         break;
+    fout<<"Target Distance: "<<target<<endl;
+    fout<<"Step Size: "<<dstep<<endl;
 
-    //     while (result.magval() < target)
-    //     {
-    //         direction = rand() % 360;
-    //         step.reset(dstep, direction);
-    //         result = result + step;
-    //         steps++;
-    //     }
-    //     cout << "After " << steps << " steps, the subject "
-    //         "has the following location:\n";
-    //     cout << result << endl;
-    //     result.polar_mode();
-    //     cout << " or\n" << result << endl;
-    //     cout << "Average outward distance per step = "
-    //         << result.magval()/steps << endl;
-    //     steps = 0;
-    //     result.reset(0.0, 0.0);
-    //     cout << "Enter target distance (q to quit): ";
-    // }
+    while (result.magval() < target)
+    {
+        direction = rand() % 360;
+        dstep = rand() % 20;
+        step.reset(dstep, direction,VECTOR::Vector::POL);
+        result = result + step;
+        fout<<steps<<": (x,y) = ("<<result.xval()<<","<<result.yval()<<")"<<endl;
+        steps++;
+    }
+    fout << "After " << steps << " steps, the subject "
+        "has the following location:\n";
+    fout << result << endl;
+    result.polar_mode();
+    fout << " or\n" << result << endl;
+    fout << "Average outward distance per step = "
+        << result.magval()/steps << endl;
+    steps = 0;
+    result.reset(0.0, 0.0);
+
     cout << "Bye!\n";
 /* keep window open
     cin.clear();
