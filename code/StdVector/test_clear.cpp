@@ -1,4 +1,5 @@
 // clearing vectors
+// ## 功能: clear用于清空vector.
 // ## 参考资料
 // [std::vector::clear](http://www.cplusplus.com/reference/vector/vector/clear/)
 #include<iostream>
