@@ -13,6 +13,7 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 
 add_executable(test_swap test_swap.cpp)
 add_executable(test_assign test_assign.cpp)
+add_executable(test_insert test_insert.cpp)
 # add_executable(exercise2_test ./exercise2_test.cpp)
 # add_executable(test_exercise3 ./golf_test.cpp)
 # add_executable(exercise4_test ./exercise4_test.cpp)
