@@ -1,4 +1,6 @@
 // clearing vectors
+// ## 参考资料
+// [std::vector::clear](http://www.cplusplus.com/reference/vector/vector/clear/)
 #include<iostream>
 #include<vector>
 
