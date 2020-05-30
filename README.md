@@ -11,3 +11,5 @@ A:[初学c++ VS code + CMake 编译调试helloWord](https://blog.csdn.net/u01426
 
 ## 参考资料
 [1] [Bjarne Stroustrup's homepage](http://www.research.att.com/-bs/)
+
+[2] [Cpp-Primer-Plus PyLab github 课后习题答案](https://github.com/PytLab/Cpp-Primer-Plus)
