@@ -3,22 +3,6 @@
 #include <iostream>
 #include<cstring>
 
-// class Cd
-// {
-// private:
-//     char performers[50];
-//     char label[20];
-//     int selections ;
-//     double playtime;
-// public:
-//     Cd (char * s1, char * s2, int n, double x);
-//     Cd (const Cd & d);
-//     Cd ();
-//     virtual ~Cd();
-//     virtual void Report() const;
-//     Cd & operator=(const Cd & d);
-// };
-
 Cd::Cd (char * s1, char * s2, int n, double x)
 {
     strcpy(performers, s1);
@@ -64,26 +48,6 @@ void Cd::Report() const
     selections=d.selections;
     playtime=d.playtime;
  }
-
-// class Classic : public Cd
-// {
-// private:
-//     char name_[4];
-// public:
-//     Classic(char* name, char* s1, char* s2,  int n, double x);
-//     Classic(char* name, const Cd & cd);
-//     Classic();
-// };
-
-// 派生类不能直接访问基类的私有成员，不然会报红。
-// Classic::Classic(char* name, char* s1, char* s2, int n, double x)
-// {
-//     strcpy(name_, name);
-//     strcpy(performers, s1);
-//     strcpy(labels, s2);
-//     selections=n;
-//     playtime=x;
-// }
 
 Classic::Classic(char* name, char* s1, char* s2, int n, double x)  :  Cd(s1, s2,n,x)
 {
