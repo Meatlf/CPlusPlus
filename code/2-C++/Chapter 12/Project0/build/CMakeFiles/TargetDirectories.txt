@@ -1,3 +1,0 @@
-/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/build/CMakeFiles/rebuild_cache.dir
-/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/build/CMakeFiles/TEST.dir
-/home/ttz/Documents/LAB/04-C&C++/2-C++/Chapter 12/Project0/build/CMakeFiles/edit_cache.dir

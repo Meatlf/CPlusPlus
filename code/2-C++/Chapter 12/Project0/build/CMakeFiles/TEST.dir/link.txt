@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/TEST.dir/strngbad.cpp.o CMakeFiles/TEST.dir/vegnews.cpp.o  -o TEST 
