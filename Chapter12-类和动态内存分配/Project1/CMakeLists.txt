@@ -1,4 +1,2 @@
-#cmake_minimum_required(2.6)
-project(TEST)
-SET(SRC_FILE string1.h string1.cpp sayings1.cpp)
-add_executable(TEST ${SRC_FILE})
+aux_source_directory(. DIR_LIB_PROJECT0_SRCS)
+add_library(Project1 ${DIR_LIB_PROJECT0_SRCS})
