@@ -432,7 +432,7 @@ if (force1 + force2 == net)
 
 除此之外，程序12.7中的程序还使用一个指针来跟踪新对象：
 
-```
+```c++
 String * favorite = new String(sayings[choice]);
 ```
 
