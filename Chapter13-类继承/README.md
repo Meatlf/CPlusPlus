@@ -20,11 +20,112 @@
 
 **小结**：本节主要介绍了**继承类的概念和语法**、**派生类构造函数的要点（派生类初始化的语法）**、**使用派生类的语法**、**派生类和基类之间的特殊关系**等。
 
-**程序清单**：程序清单 13.1 tabtenn0.h、13.2 tabtenn0.cpp、13.3 usett0.cpp 介绍了关于**一个基类的声明、定义、使用**用于本节后续内容的阐述。
-
 **Q**：基类和派生类的**概念**？
 
 **A**：从一个类派生出另一个类时，原始类称为**基类**，继承类称为**派生类**。
+
+Webtown俱乐部决定跟踪乒乓球会会员。作为俱乐部的首席程序员，需要设计一个简单的TableTennisPlayer类。如程序13.1和13.2所示。
+
+**程序清单**：程序清单 13.1 tabtenn0.h、13.2 tabtenn0.cpp、13.3 usett0.cpp 介绍了关于**一个基类的声明、定义、使用**用于本节后续内容的阐述。
+
+程序13.1 tabtenn0.h
+
+```c++
+#ifndef TABTENN0_H_
+#define TABTENN0_H_
+#include <string>
+using std::string;
+
+class TableTennisPlayer
+{
+private:
+    string firstname;
+    string lastname;
+    bool hasTable;
+public:
+    TableTennisPlayer(const string & fn = "none",
+              const string & ln = "none",
+              bool ht = false);
+    void Name() const;
+    bool HasTable() const {return hasTable;}
+    void ResetTable(bool v) {hasTable = v;}
+};
+
+#endif
+```
+
+程序13.2 tabtenn0.cpp
+
+```c++
+#include "tabtenn0.h"
+#include <iostream>
+
+TableTennisPlayer::TableTennisPlayer(const string & fn,
+    const string & ln, bool ht):firstname(fn), 
+        lastname(ln),hasTable(ht) {}
+
+void TableTennisPlayer::Name() const
+{
+    std::cout << lastname << ", " << firstname;
+}
+```
+
+构造函数使用了第12章介绍的**初始化列表语法**，但也可以像下面这样做：
+
+```c++
+TableTennisPlayer::TableTennisPlayer(const string & fn,
+                    const string & ln, bool ht)
+{
+    firstname = fn; 
+    lastname = ln;
+    hasTable = ht; 
+}
+```
+
+这将首先为firstname调用string的默认构造函数，再调用string的赋值运算符将fitstname设置为fn，但初始化列表语法可以减少一个步骤，它直接使用string的复制构造函数将firstname初始化为fn。
+
+程序13.3 usett0.cpp
+
+```c++
+#include <iostream>
+#include "tabtenn0.h"
+
+int main()
+{
+    using std::cout;
+    TableTennisPlayer player1("Chuck", "Blizzard", true);
+    TableTennisPlayer player2("Tara", "Boomdea", false);
+
+    player1.Name();
+    if (player1.HasTable())
+        cout << ": has a table.\n";
+    else
+        cout << ": hasn't a table.\n";
+    player2.Name();
+        if (player2.HasTable())
+                cout << ": has a table.\n";
+        else
+                cout << ": hasn't a table.\n";
+
+    return 0;
+}
+```
+
+输出：
+
+```
+Blizzard, Chuck: has a table.
+Boomdea, Tara: hasn't a table.
+```
+
+注意到该程序实例化对象将C-风格字符串作为参数：
+
+```
+TableTennisPlayer player1("Chuck", "Blizzard", true);
+TableTennisPlayer player2("Tara", "Boomdea", false);
+```
+
+初始化列表语法但构造函数的形参类型被声明为const string &。这导致类型不匹配，但与第12章创建的String类一样，string类有一个将const char *作为参数的构造函数，使用C-风格字符串初始化string对象，将自动调用这个构造函数。总之，可见string对象或C-风格字符串作为构造函数TableTennisPlayer的参数；将前者作为参数时，将调用接受const string &作为参数的string构造函数，而将后者作为参数，将调用接受const char**作为参数的string构造函数。
 
 ### 13.1.1 派生一个类
 
