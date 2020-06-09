@@ -431,9 +431,9 @@ A：编译器处理虚函数的方法是：给每一个对象添加一个隐藏�
 
 ## 13.5 访问控制：protected
 
-小结：
+**小结**：
 
-1）private和protected之间的区别只有在基类派生的类中才会表现出来；
+1）private和protected之间的区别只有在**基类派生的类**中才会表现出来；
 
 2）派生类的成员可以直接访问基类的保护成员，但不能直接访问基类的私有成员；
 
@@ -443,15 +443,63 @@ A：编译器处理虚函数的方法是：给每一个对象添加一个隐藏�
 
 5）一般不使用保护数据成员，而使用保护方法。
 
+例如，假如Brass类将balance成员声明为保护的：
+
+```c++
+class Brass
+{
+protected:
+    double balance;
+};
+```
+
+在这种情况下，BrassPlus类可以直接访问balance，而不需要使用Brass方法。例如，可以这样编写BrassPlus::Withdraw()的核心：
+
+```c++
+void BrassPlus::Withdraw(double amt)
+{
+    if (amt < 0)
+        cout << "Withdrawal amount must be positive; with drawal canceled.\n"
+    else if (amt <= balance)						// 可以直接使用保护型变量blance
+        balance -= amt
+    else if ( amt <= balance + maxLoan - owesBank)
+    {
+        double advance = amt - balance;
+        owesBank += advance * (1.0 + rate);
+        cout << "Bank advance: $" << advance << endl;
+        cout << "Finance charge: $" << advance * rate << endl;
+        Deposite(advance);
+        balance -= amt;
+    }
+    else
+        cout << "Credit limit exceed. Transaction cancelled.\n";
+}
+```
+
+使用保护数据成员可以简化代码的编写工作，但存在设计缺陷。例如，继续以BrassPlus为例，如果balance是受保护的，则可以按下面的方式编写代码：
+
+```c++
+void BrassPlus::Reset(double amt)
+{
+    balance = amt;
+}
+```
+
+Brass类被设计成只能通过Deposit()和Withdraw()才能修改修改balance。但对于BrassPlusd对象，Reset()方法将忽略Withdraw()中的保护措施，实际上使balance称为公有变量。
+
+**警告：**最好对类数据成员采用私有访问控制，不要使用保护访问控制；同时通常基类方法使派生类能够访问基类数据。
+
+然而，对于成员函数来说，保护访问控制很有用，它让派生类能够访问公众不能使用的内部函数。
+
 ## 13.6 抽象基类
 
-Q：为什么要有抽象基类（abstract base class）的概念？
+**Q**：为什么要有抽象基类（abstract base class）的概念？
 
-A：书中使用圆和椭圆的关系说明了抽象基类的必要性。圆可以派生于椭圆，然而有的椭圆的方法而圆使用不到，因而直接使用派生类不是很好的办法。如果直接声明定义圆类，这样就忽略了圆类和椭圆类之间的关系，这样也不好。因而，将圆类和椭圆类共有的方法进一步抽象，形成抽象基类。
+**A**：抽象基类也是属于类继承的范畴，书中使用圆和椭圆的关系说明了抽象基类的必要性。圆可以派生于椭圆，然而有的椭圆的方法而圆使用不到，因而直接使用派生类不是很好的办法。如果直接声明定义圆类，这样就忽略了圆类和椭圆类之间的关系，这样也不好。因而，将圆类和椭圆类共有的方法进一步抽象，形成抽象基类。
 
-Q：如何声明抽象基类？
+**Q**：如何声明抽象基类？
 
-A：使用纯虚函数（pure virtual function）。
+**A**：使用纯虚函数（pure virtual function）。
 
 Q：如何声明虚函数？
 
@@ -469,7 +517,312 @@ class BaseClass
 }
 ```
 
-结论：当类声明中包含纯虚函数时，则不能创建该类的对象。这里的理念是，包含纯虚函数的类只能作基类。要成为真正的抽象基类(abstract base class,ABC),必须至少包含一个纯虚函数。原型中的=0使虚函数成为纯虚函数。总之，在原型中使用=0指出类是一个抽象基类，在类中可以不定义该函数。ABC描述的是至少使用一个纯虚函数的接口，从ABC派生出的类将根据派生类的具体特征，使用常规虚函数来实现这种接口。
+**结论**：**当类声明中包含纯虚函数时，则不能创建该类的对象。这里的理念是，包含纯虚函数的类只能作基类。**要成为真正的抽象基类(abstract base class,ABC),必须至少包含一个纯虚函数。原型中的=0使虚函数成为纯虚函数。
+
+例如，也许所有的基类方法都与Move()一样，可以在基类中进行定义，但您仍需要将这个声明为抽象的。在这种情况下，可以将原型声明为虚的：
+
+```c++
+void Move(int nx, ny) = 0;
+```
+
+这将使基类成为抽象的，但您仍可以实现文献中提供的方法：
+
+```c++
+void BaseEllipse::Move(int nx, ny) {x = nx, y =ny; }
+```
+
+**总之，在原型中使用=0指出类是一个抽象基类，在类中可以不定义该函数。**ABC描述的是至少使用一个纯虚函数的接口，从ABC派生出的类将根据派生类的具体特征，使用常规虚函数来实现这种接口。
+
+### 13.6.1 应用ABC概念
+
+将ABC概念用于Brass和BrassPlus账户。首先定义一个名为AcctABC的ABC。这个类包含Brass和BrassPlus类共有的所有方法和数据成员，而那些在BrassPlus类和Brass类中的行为不同的方法应被声明为虚函数。至少应有一个虚函数是纯虚函数，这样才能使AcctABC称为抽象类。
+
+程序13.11的头文件声明了AcctABC类、Brass类和BrassPlus类。为帮助派生类访问基类数据，AcctABc提供了一些保护方法：派生类方法可以调用这些方法，但它们并不是派生类对象的公有接口的组成部分。AcctABC还提供一个保护成员函数，用于处理格式化。另外，AcctABC类还有两个纯虚函数，所以它确实是抽象类。
+
+程序13.11 acctabc.h
+
+```c++
+#ifndef ACCTABC_H_
+#define ACCTABC_H_
+#include <string>
+#include <iostream>
+using std::string;
+
+class AcctABC
+{
+private:
+    string fullName;
+    long acctNum;
+    double balance;
+protected:
+    struct Formatting
+    {
+        std::ios_base::fmtflags flag;
+        std::streamsize pr;
+    };
+    const string & FullName() const { return fullName; }
+    long AcctNum() const { return acctNum; }
+    Formatting SetFormat() const;
+    void Restore(Formatting & f) const;
+public:
+    AcctABC(const string & s = "Nullbody", long an = -1,
+        double bal = 0.0);
+    void Deposit(double amt);
+    virtual void Withdraw(double amt) = 0;		// 纯虚函数
+    double Balance() const { return balance; }
+    virtual void ViewAcct() const = 0;			// 纯虚函数
+    virtual ~AcctABC() {}
+};
+
+class Brass : public AcctABC
+{
+public:
+    Brass(const string & s = "Nullbody", long an = -1,
+        double bal = 0.0) : AcctABC(s, an, bal) {}
+    virtual void Withdraw(double amt);
+    virtual void ViewAcct() const;
+    virtual ~Brass() {}
+};
+
+class BrassPlus : public AcctABC
+{
+private:
+    double maxLoan;
+    double rate;
+    double owesBank;
+public:
+    BrassPlus(const string & s = "Nullbody", long an = -1, 
+          double bal = 0.0, double ml = 500,
+          double r = 0.10);
+    BrassPlus(const Brass & ba, double ml = 500, double r = 0.10);
+    virtual void Withdraw(double amt);
+    virtual void ViewAcct() const;
+    void ResetMax(double m) { maxLoan = m; }
+    void ResetRate(double r) { rate = r; }
+    void ResetOwes() { owesBank = 0; }
+};
+
+#endif
+```
+
+程序13.12 acctabc.cpp
+
+```c++
+#include "acctabc.h"
+#include <iostream>
+using namespace std;
+
+AcctABC::AcctABC(const string & s, long an, double bal)
+{
+    fullName = s;
+    acctNum = an;
+    balance = bal;
+}
+
+void AcctABC::Deposit(double amt)
+{
+    if ( amt < 0 )
+        cout << "Negative deposit not allowed; deposite is cancelled.\n";
+    else    
+        balance += amt;
+}
+
+AcctABC::Formatting AcctABC::SetFormat() const
+{
+    Formatting f;
+    f.flag = cout.setf(ios_base::fixed, ios_base::floatfield);
+    f.pr = cout.precision(2);
+    return f;
+}
+
+void AcctABC::Restore(Formatting & f) const
+{
+    cout.setf(f.flag, ios_base::floatfield);
+    cout.precision(f.pr);
+}
+
+
+void Brass::Withdraw(double amt)
+{
+    if (amt < 0)
+        cout << "Withdrawal amount must be positive; "
+             << "withdrawal cancelled.\n";
+    else if (amt <= Balance())
+        Withdraw(amt);
+    else
+        cout << "Withdrawal amount of $" << amt
+             << " exceeds your balance.\n"
+             << "Withdrawal cancelled.\n";
+}
+
+void Brass::ViewAcct() const 
+{
+    Formatting f = SetFormat();
+    cout << "Barss client: " << FullName() << endl;
+    cout << "Account Number: " << AcctNum() << endl;
+    cout << "Balance: $" << Balance() << endl;
+    Restore(f);
+}
+
+BrassPlus::BrassPlus(const string & s, long an, double bal,
+        double ml, double r): AcctABC(s, an ,bal)
+{
+    maxLoan = ml;
+    rate = r;
+    owesBank = 0.0;
+}
+
+BrassPlus::BrassPlus(const Brass & ba, double ml, double r)
+        : AcctABC(ba)
+{
+    maxLoan = ml;
+    rate = r;
+    owesBank = 0.0;
+}
+
+void BrassPlus::ViewAcct() const
+{
+    Formatting f = SetFormat();
+
+    cout << "BrassPlus Client: " << FullName() << endl;
+    cout << "Account Number: " << AcctNum() << endl;
+    cout << "Balance: $" << Balance() << endl;
+    cout << "Maximum loan: $" << maxLoan << endl;
+    cout << "Owed to bank: $" << owesBank << endl;
+    cout.precision(3);
+    cout << "Loan Rate: " << 100 * rate << "%\n";
+    Restore(f);
+}
+
+void BrassPlus::Withdraw(double amt)
+{
+    Formatting f = SetFormat();
+
+    double bal = Balance();
+    if (amt <= bal)
+        Withdraw(amt);
+    else if (amt <= bal + maxLoan - owesBank)
+    {
+        double advance = amt - bal;
+        owesBank += advance * (1.0 + rate);
+        cout << "Bank advance: $" << advance << endl;
+        cout << "Finance charge: $" << advance * rate << endl;
+        Deposit(advance);
+        Withdraw(amt);
+    }
+    else
+        cout << "Credit limit exceeded. Transaction cancelled.\n";
+    Restore(f);
+}
+```
+
+保护方法FullName()和AcctNum()提供了对数据成员fullName和acctNum的只读访问，使得可以进一步定制每个派生类的ViewAcct()。
+
+这个版本在设置输出格式方面做了两项改进。前一个版本使用两个函数调用来设置输出格式，并使用一个函数调用来恢复格式：
+
+```c++
+format initialState = setFormat();
+precis prec = cout.precision(2);
+...
+restore(initialState, prec);
+```
+
+这个版本定义了一个结构，用于存储两项格式设置；并使用该结构来设置和恢复格式，因此只需要两个函数调用：
+
+```c++
+struct Formatting
+{
+    std::ios_base::fmtflags flag;
+    std::streamsize pr;
+};
+
+Formatting f = SetFormat();
+...
+Restore(f);
+```
+
+因此代码更整洁。
+
+旧版本存在的问题是，setFormat()和restore()都是独立的函数，这些函数与客户定义的同名函数发生冲突。解决这种问题的方式有多种，一种方式是将这些函数声明为静态的，这样它们将归文件brass.cpp及其继任acctabc.cpp私有。另一种方式是，将这些函数以及结构Formatting放在一个独立的名称空间中。但这个示例探讨的主题之一是保护访问权限，因此将这些结构和函数放在了类定义的保护部分。这使得它们对基类和派生类可用，同时向外隐藏了它们。
+
+对于Brass和BrassPlus账户的这种实现，使用方式与旧实现相同，因为类方法的名称和接口都与以前一样。例如，为程序13.10能够使用新的实现，需要采取下面的步骤将usebrass2.cpp转换为usebrass3.cpp
+
+- 使用acctabc.cpp而不是brass.cpp来连接usebrass.cpp
+
+- 包含文件acctabc.h，而不是brass.h
+
+- 将下面的代码替换
+
+  Brass * p_clients[CLIENTS];
+
+替换为：
+
+```c++
+AcctABC * p_clients[CLIENTS];
+```
+
+程序13.13usebrass3.cpp
+
+```c++
+#include <iostream>
+#include "acctabc.h"
+#include <string>
+const int CLIENTS = 4;
+using namespace std;
+
+int main()
+{
+    AcctABC * p_clients[CLIENTS];
+    string temp;
+    long tempnum;
+    double tempbal;
+    char kind;
+
+    for (int i = 0; i < CLIENTS; i++)
+    {
+        cout << "Enter client's name: ";    
+        getline(cin, temp);
+        cout << "Enter client's account number: ";
+        cin >> tempnum;
+        cout << "Enter opening balance: $";
+        cin >> tempbal;
+        cout << "Enter 1 for Brass Account or "
+             << "2 for BrassPlus Account: ";
+        while (cin >> kind && (kind != '1' && kind != '2'))
+            cout << "Enter either 1 or 2: ";
+        if (kind == '1')
+            p_clients[i] = new Brass(temp, tempnum, tempbal);
+        else
+        {
+            double tmax, trate;
+            cout << "Enter the overdraft limit: $";
+            cin >> tmax;
+            cout << "Enter the interest rate "
+                 << "as a decimal fraction: ";
+            cin>> trate;
+            p_clients[i] = new BrassPlus(temp, tempnum, tempbal, 
+                            tmax, trate);
+        }
+        while (cin.get() != '\n')
+            continue;
+    }
+    cout << endl;
+    for (int i = 0; i < CLIENTS; i++)
+    {
+        p_clients[i]->ViewAcct();
+        cout << endl;
+    }
+
+    for (int i = 0; i < CLIENTS; i++)
+    {
+        delete p_clients[i];
+    }
+    cout << "Done!\n";
+    return 0;
+}
+```
+
+该程序的行为与非抽象基类版本相同，因此如果输入与给程序13.10提供的输入相同，输出也将相同。
 
 ### 13.6.2 ABC理念
 
