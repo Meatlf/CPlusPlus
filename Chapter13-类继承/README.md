@@ -930,3 +930,389 @@ int main()
 设计ABC之前，首先应开发一个模型–指出编程问题所需的类以及它们之间相互关系。一种学院派思想认为，如果要设计类继承层次，则只能将那些不会被用作基类的类设计为具体的类。
 
 **ABC要求具体派生类覆盖其纯虚函数–迫使派生类遵循ABC所设置的接口规则。这种模型在基于组件的编程模式中很常见，在这种情况下，使用ABC使组件设计人员能够制定“接口约定”，这样确保了从ABC派生的所有组件都至少支持ABC指定的功能。**
+
+## 13.7 继承和动态分配
+
+继承是怎样与动态内存分配(使用new和delete)进行互动的呢？例如，如果基类使用动态内存分配，并重新定义赋值运算符或复制构造函数，这将怎么影响派生类的实现呢？这个问题的答案取决于派生类的属性。如果派生类也使用动态内存分配，那么就需要学习几个新的小技巧。下面来看看这两种情况。
+
+### 13.7.1 第一种情况：派生类不使用new
+
+小结：当派生类不使用new时，则不需要显示析构函数、复制构造函数和赋值运算符。
+
+假设基类使用了动态内存分配：
+
+```
+class baseDMA
+{
+private:
+    char * label;
+    int rating;
+public:
+    baseDMA(const char * l = "null", int r = 0);
+    baseDMA(const baseDMA &);j
+    virtual ~baseDMA();
+    baseDMA & operator=(cosnt baseDMA & rs);
+...
+};
+```
+
+声明中包含了构造函数使用new时需要的特殊方法：析构函数、复制构造函数和重载赋值运算符。
+
+现在，从baseDMA派生出lackDMA类，而后者不使用new，也未包含其他一些不常用的、需要特殊处理的设计特性：
+
+```
+class lackDMA : pulic baseDMA
+{
+private:
+    char color[40];
+public:
+...
+}
+```
+
+是否需要为lackDMA类定义显式析构函数、复制构造函数和赋值运算符呢？不需要。
+
+首先，来看是否需要析构函数。如果没有定义析构函数，编译器将定义一个不执行任何操作的默认构造函数。实际上，派生类的默认构造函数总是要进行一些操作的：执行自身的代码后调用基类析构函数。因为我们假设lackDMA成员不执行任何特殊操作，所以默认析构函数是合适的。
+
+接着来看赋值构造函数。第12章介绍过，默认复制构造函数执行成员复制，这对于动态内存分配来说是不合适的。但对于新的lackDMA成员来说是合适的。因此只需考虑继承的basedDMA对象。要知道，成员复制将根据数据类型采用相应的复制方式，因此，将long复制到long中通过使用常规复制完成的；但复制类成员或继承的类组件时，则是使用该类的复制构造函数完成的。所以，lackDMA类的默认复制构造函数使用显式baseDMA复制构造函数来复制lackDMA对象的baseDMA部分。因此，默认复制构造函数对于新的lackDMA成员来说是合适的，同时对于继承的baseDMA对象来说也是合适的。
+
+对于赋值来说，也是如此。类的默认赋值运算符将自动使用基类的赋值运算符来对基类组件进行赋值。因此，默认赋值运算符也是合适的。
+
+派生类对象的这些属性也适用于本身对象的类成员。例如，第10章介绍过，实现Stock类时，可以使用string对象而不是char数组来存储公司名称。标准string类和本书前面创建的String类一样，也采用动态内存分配。现在，读者知道了为何这不会引发问题。Stock的默认复制构造函数将使用string的复制构造函数来复制对象company成员；Stock的默认赋值运算符将使用strig的赋值运算符来给对象的company成员赋值；而Stock的析构函数将自动调用string的析构函数。
+
+### 12.7.2 第二种情况：派生类使用new
+
+假设派生类使用了new:
+
+```
+class hasDMA : public baseDMA
+{
+private:
+    char * style;
+public:
+...
+};
+```
+
+在这种情况下，必须为派生类定义显式析构函数、赋值用品认识和复制构造函数。下面依次考虑这些方法。
+
+派生类析构函数自动调用基类的析构函数，故其自身的职责是对派生类构造函数执行的工作进行清理。因此hasDMA析构函数必须释放指针style管理的内存，并依赖于basdDMA的析构函数来释放指针label管理的内存。
+
+```
+baseDMA::~baseDMA()
+{
+    delete [] label;
+}
+
+hasDMA::~hasDMA()
+{
+    delete [] style;
+}
+```
+
+接下来看复制构造函数。BaseDMA的复制构造函数遵循用char数组的常规模式，即使用strlen()来获悉存储C-风格字符串所需的空间、分配足够的内存（字符数加上存储空字符所需的1字节）并使用函数strcpy()将原始字符串赋值到目的地：
+
+```
+baseDMA::baseDMA(const baseDMA & rs)
+{
+    label = new char[std::strlen(rs.label) + 1];
+    std::strcpy(label, rs.label);
+    rating = rs.rating;
+}
+```
+
+hasDMA复制构造函数只能访问hasDMA的数据，因此它必须调用baseDMA复制构造函数来处理共享的baseDMA数据：
+
+```
+hasDMA::hasDMA(const hasDMA & hs) : baseDMA(hs)
+{
+    style = new char[std::strlen(hs.style + 1)];
+    stdJ::strcpy(style, hs.style);
+}
+```
+
+需要注意的一点是，成员初始化列表将一个hasDMA引用传递给baseDMA构造函数。没有参数类型为hasDMA引用的base构造函数，也不需要这样的构造函数。因为复制构造函数baseDMA有一个baseDMA引用参数，而基类可以指向派生类型。因此baseDMA复制构造函数将使用hasDMA参数的baseDMA部分来构造新对象的baseDMA部分。
+
+接下来看赋值运算符。BaseDMA赋值运算符遵循下述常规模式：
+
+```
+baseDMA & baseDMA::operator(const baseDMA & rs)
+{
+    if (this == &rs)
+        return *this;
+    delete [] label;
+    label = new char[std::strlen(rs.label) + r];
+    std::strcpy(label, rs.label);
+    rating = rs.rating;
+    return *this;
+}
+```
+
+由于hasDMA也使用动态内存分配，所以它需要一个显式赋值运算符。作为hasDMA的方法，它只能直接访问hasDMA的数据。然而，派生类的显式赋值运算符必须负责所有的baseDMA基类对象的赋值，可以通过显式调用基类赋值运算符来完成这项工作，如下所示：
+
+```
+hasDMA & hasDMA::operator=(cosnt hasDMA & hs)
+{ 
+    if ( this == &hs)
+        return *this;
+    baseDMA::operator=(hs);
+    delete [] style;
+    style = new char [std::strlen(hs.style) + 1];
+    std::strcpy(style, hs.style);
+    return *this;
+}
+```
+
+下述语句看起来有点奇怪：
+
+```
+baseDMA::operator=(hs);
+```
+
+但是通过使用函数表示法，而不是运算符表示法，可以使用作用域解析运算符。实际上，该语句的含义如下：
+
+```
+*this = hs;  //使用baseDMA::operator=();
+```
+
+当然，编译器将忽略注释，所以使用后面的代码时，编译器将使用hasDMA::operator=()，从而形程递归调用。使用函数表示使得赋值运算符被正确调用。
+
+总之，当基类和派生类都采用动态内存分配时，派生类的析构函数、复制构造函数和赋值运算符都必须使用相应的基类方法来处理基类元素。这种要求通过三种不同的方式来满足。对于析构函数，这是自动完成的；对于构造函数，这是通过在初始化成员列表中调用基类的复制构造函数来完成的；如果不这样做，将自动调用基类的默认构造函数。对于赋值运算符，这是通过使用作用域解析运算符乡试第调用基类的赋值运算符来完成的。
+
+### 13.7.3 使用动态内存分配和友元的继承示例
+
+为演示这些有关继承和动态分配的概念，我们将刚才介绍过的baseDMA、lackDMA和hasDMA类集成到一个示例中。程序13.14是这些类的头文件。除前面介绍的内容外，这个头文件还包含一个友元函数，以说明派生类如何访问基类的友元。
+
+程序13.14 dma.h
+
+```
+#ifndef DMA_H_
+#define DMA_H_
+#include <iostream>
+
+class baseDMA
+{
+private:
+    char * label;
+    int rating;
+public:
+    baseDMA(const char * l = "null", int r = 0);
+    baseDMA(const baseDMA & rs);
+    virtual ~baseDMA();
+    baseDMA & operator=(const baseDMA & rs);
+    friend std::ostream & operator<<(std::ostream & os, const baseDMA & rs);
+};
+
+
+class lackDMA : public baseDMA
+{
+private:
+    enum {COL_LEN = 40};
+    char color[COL_LEN];
+public:
+    lackDMA(const char * c = "blank", const char * l = "null",
+             int r = 0);
+    lackDMA(const char * c, const baseDMA & rs);
+    friend std::ostream & operator<<(std::ostream & os, const lackDMA & rs);
+};
+
+class hasDMA : public baseDMA
+{
+private:
+    char * style;
+public:
+    hasDMA(const char * c = "none", const char * l = "null",
+            int r = 0);
+    hasDMA(const char * c, const baseDMA & rs);
+    hasDMA(const hasDMA & hs);
+    hasDMA & operator=(const hasDMA & hs);
+    ~hasDMA();
+    friend std::ostream & operator<<(std::ostream & os, const hasDMA & rs);
+};
+
+#endif
+```
+
+程序13.15 dma.cpp
+
+```
+#include <iostream>
+#include "dma.h"
+#include <cstring>
+using namespace std;
+
+baseDMA::baseDMA(const char * l, int r)
+{
+    label = new char[strlen(l) + 1];
+    strcpy(label, l);
+    rating = r;
+}
+
+baseDMA::baseDMA(const baseDMA & rs)
+{
+    label = new char[strlen(rs.label) + 1];
+    strcpy(label, rs.label);
+    rating = rs.rating;
+}
+
+baseDMA::~baseDMA()
+{
+    delete [] label;
+}
+
+baseDMA & baseDMA::operator=(const baseDMA & rs)
+{
+    if (this == &rs)
+        return *this;
+    delete [] label;
+    label = new char[strlen(rs.label) + 1];
+    strcpy(label, rs.label);
+    rating = rs.rating;
+    return *this;
+}
+
+ostream & operator<<(ostream & os, const baseDMA & rs)
+{
+    os << "Label: " << rs.label << endl;
+    os << "Rating: " << rs.rating << endl; 
+    return os;
+}
+
+lackDMA::lackDMA(const char * c, const char * l, int r) : baseDMA(l, r)
+{
+    strncpy(color, c, COL_LEN-1);
+    color[COL_LEN-1] = '\0';
+}
+
+lackDMA::lackDMA(const char * c, const baseDMA & rs) : baseDMA(rs)
+{
+    strncpy(color, c, COL_LEN-1);
+    color[COL_LEN-1] = '\0';
+}
+
+ostream & operator<<(ostream & os, const lackDMA & rs)
+{
+    os << (const baseDMA &) rs;
+    os << "Color: " << rs.color << endl;
+    return os;
+}
+
+hasDMA::hasDMA(const char * s, const char * l, int r) : baseDMA(l, r)
+{
+    style = new char[strlen(s) + 1];
+    strcpy(style, s);
+}
+
+hasDMA::hasDMA(const char * s, const baseDMA & hs) : baseDMA(hs)
+{
+    style = new char[strlen(s) + 1];
+    strcpy(style, s);
+}
+
+hasDMA::hasDMA(const hasDMA & hs) : baseDMA(hs)
+{
+    style = new char[strlen(hs.style) + 1];
+    strcpy(style, hs.style);
+}
+
+hasDMA::~hasDMA()
+{
+    delete [] style;
+}
+hasDMA & hasDMA::operator=(const hasDMA & hs)
+{
+    if (this == &hs)
+        return *this;
+    baseDMA::operator=(hs);
+    delete [] style;
+    style = new char[strlen(hs.style) + 1];
+    strcpy(style, hs.style);
+    return *this;
+}
+
+ostream & operator<<(ostream & os, const hasDMA & rs)
+{
+    os << (const baseDMA &) rs;
+    os << "Style: " << rs.style << endl;
+    return os;
+}
+```
+
+在程序13.14和13.15中，需要注意的特性是，派生类如何使用基类的友元。例如，请考虑下面这个hasDMA类的友元：
+
+```
+friend std::ostream & operator<<(std::ostream & os, const hasDMA & rs);
+```
+
+作为hasDMA类的友元，该函数能够访问style成员。然而，还存在一个问题：该函数如不是baseDMA类的友元，那它如何访问成员label和rating呢？答案是使用baseDMA类的友元函数operator<<()。
+
+下一个问题是，因为友元不是成员函数，所以不能使用作用域解析运算符指出使用哪个函数。这个问题的解决办法是使用强制类型转换，以便匹配原型能够选择正确的函数。因此代码将参数const hasDMA & 转换成类型const baseDMA &的参数：
+
+```
+ostream & operator<<(ostream & os, const hasDMA & rs)
+{
+    os << (const baseDMA &) rs;
+    os << "Style: " << rs.style << endl;
+    return os;
+}
+```
+
+程序13.16是一个测试小程序。
+
+程序13.16 usedma.cpp
+
+```
+#include "dma.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    baseDMA shirt("Portabelly", 8);
+    lackDMA balloon("red", "Blimpo", 4);
+    hasDMA map("Mercator", "Buffalo Keys", 5);
+    cout << "Display baseDMA object:\n";
+    cout << shirt << endl;
+    cout << "Display lackDMA object:\n";
+    cout << balloon << endl;
+    cout << "Display hasDMA object:\n";
+    cout << map << endl;
+    lackDMA balloon2(balloon);
+    cout << "Result of lackDMA copy:\n";
+    cout << balloon2 << endl;
+    hasDMA map2;
+    map2 = map;
+    cout << "Resutl of hasDMA assignment:\n";
+    cout << map2 << endl;
+    return 0;
+}
+```
+
+输出：
+
+```
+Display baseDMA object:
+Label: Portabelly
+Rating: 8
+
+Display lackDMA object:
+Label: Blimpo
+Rating: 4
+Color: red
+
+Display hasDMA object:
+Label: Buffalo Keys
+Rating: 5
+Style: Mercator
+
+Result of lackDMA copy:
+Label: Blimpo
+Rating: 4
+Color: red
+
+Resutl of hasDMA assignment:
+Label: Buffalo Keys
+Rating: 5
+Style: Mercator
+```
