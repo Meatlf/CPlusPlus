@@ -1033,6 +1033,452 @@ friend Time operator(const Time &t1, const Time & t2);
 
 ## 11.5 再谈重载：一个矢量类
 
+描述矢量需要两个数：
+
+- 可以用大小(长度)和方向(角度)描述矢量；
+- 可以用分量x和y表示矢量。
+
+程序11.13列出了这个类的声明。为复习名称空间，该清单见类声明放在VECTOR名称空间中。另外，该程序使用枚举创建了两个常量(RECT和POL)，用于标识两种表示法。
+
+程序11.13 vector.h
+
+```c++
+#ifndef VECTOR_H_
+#define VECTOR_H_
+
+#include <iostream>
+namespace VECTOR
+{
+    class Vector
+    {    
+    public:
+        enum Mode {RECT, POL};
+    private:
+        double x;
+        double y;
+        double mag;
+        double ang;
+        Mode mode;
+        void set_mag();
+        void set_ang();
+        void set_x();
+        void set_y();
+    public:
+        Vector();
+        Vector(double n1, double n2, Mode form = RECT);
+        void reset(double n1, double n2, Mode form = RECT);
+        ~Vector();
+        double xval() const {return x;}				
+        double yval() const {return y;}
+        double magval() const {return mag;}
+        double angval() const {return ang;}
+        void polar_mode();
+        void rect_mode();
+        Vector operator+(const Vector & b) const;		// 以下6个方法为新知识
+        Vector operator-(const Vector & b) const;
+        Vector operator-() const;
+        Vector operator*(double n) const;
+        friend Vector operator*(double n, const Vector & a);
+        friend std::ostream & operator<<(std::ostream & os, const Vector & v);
+    };
+}
+
+#endif
+```
+
+注意，程序中4个报告分量值的函数（xval()到angval()）是在类中声明的，因此自动成为内联函数。
+
+程序14利用名称空间的开放性，将方法定义添加到VECTOR名称空间中。另外，C++的内置数学函数在使用角度时以弧度为单位，所以函数在度和弧度之间进行转换。
+
+程序11.14 vector.cpp
+
+```c++
+#include <iostream>
+#include <cmath>
+#include "vector.h"
+
+using std::sqrt;
+using std::sin;
+using std::cos;
+using std::atan;
+using std::atan2;
+using std::cout;
+
+namespace VECTOR
+{
+    const double Rad_to_deg = 45.0 / atan(1.0);
+
+
+    //private methods;
+    void Vector::set_mag()
+    {
+        mag = sqrt(x * x + y * y);
+    }
+
+    void Vector::set_ang()
+    {
+        if (x == 0.0 && y == 0.0)
+            ang = 0.0;
+        else
+            ang = atan2(y, x);
+    }
+
+    void Vector::set_x()
+    {
+        x = mag * cos(ang);
+    }
+
+    void Vector::set_y()
+    {
+        y = mag * sin(ang);
+    }
+
+    //public methods;
+    Vector::Vector()
+    {
+        x = y = mag = ang = 0.0;
+        mode = RECT;
+    }
+
+    Vector::Vector(double n1, double n2, Mode form)
+    {
+        mode = form;
+        if (form == RECT)
+        {
+            x = n1;
+            y = n2;
+            set_mag();
+            set_ang();
+        }
+        else if (form == POL)
+        {
+            mag = n1;
+            ang = n2 / Rad_to_deg;
+            set_x();
+            set_y();
+        }
+        else
+        {
+            cout << "Incorrect 3rd argument to Vector() -- ";
+            cout << "vector set to 0\n";
+            x = y = mag = ang = 0.0;
+            mode = RECT;
+        }
+    }
+
+    void Vector::reset(double n1, double n2, Mode form)
+    {
+                mode = form;
+                if (form == RECT)
+                {
+                        x = n1;
+                        y = n2;
+                        set_mag();
+                        set_ang();
+                }
+                else if (form == POL)
+                {
+                        mag = n1;
+                        ang = n2 / Rad_to_deg;
+                        set_x();
+                        set_y();
+                }
+                else
+                {
+                        cout << "Incorrect 3rd argument to Vector() -- ";
+                        cout << "vector set to 0\n";
+                        x = y = mag = ang = 0.0;
+                        mode = RECT;
+                }
+    }
+
+    Vector::~Vector()
+    {}
+
+    void Vector::polar_mode()
+    {
+        mode = POL;
+    }
+
+    void Vector::rect_mode()
+    {
+        mode = RECT;
+    }
+
+    Vector Vector::operator+(const Vector & b) const	// 以下代码为新
+    {
+        return Vector(x + b.x, y + b.y);
+    }
+
+    Vector Vector::operator-(const Vector & b) const
+    {
+        return Vector(x - b.x, y - b.y);
+    }
+
+    Vector Vector::operator-() const
+    {
+        return Vector(-x, -y);
+    }
+
+    Vector Vector::operator*(double n) const
+    {
+        return Vector(x*n ,y*n);
+    }
+
+    Vector operator*(double n, const Vector & a)
+    {
+        return a * n;
+    }
+
+    std::ostream & operator<<(std::ostream & os, const Vector & v)
+    {
+        if (v.mode == Vector::RECT)
+            os << "(x, y) = (" << v.x << ", " << v.y  << ")";
+        else if (v.mode == Vector::POL)
+        {
+            os << "(m, a) = (" << v.mag << ", " << v.ang << ")";
+        }
+        else
+            os << "Vector object mode is invalid!";
+        return os;
+    }
+}
+```
+
+reset方法并非必不可少。假设shove是一个Vector对象，您编写了如下代码：
+
+```c++
+shove.reset(100, 300);
+```
+
+可以使用构造函数来得到相同的结果：
+
+```c++
+shove = Vector(100, 300);
+```
+
+然而，reset()直接修改shove的内容，而使用构造函数将增加额外的步骤：创建一个临时对象，然后将其赋值给shove。
+
+### 11.5.1 使用状态成员
+
+Vectore类存储了矢量的直角坐标和极坐标。它使用名为mode的成员来控制使用构造函数、reset()方法和重载operator<<()函数使用哪种形式，其中枚举RECT表示直角坐标模式(默认值)，POL表示极坐标模式。这样的成员被称为状态成员，因为这种成员描述的是对象所处的状态。
+
+由构造函数的代码可知，第三个参数RECT或省略了，则将输入解释为直角坐标；如果为POL，则将输入解释为极坐标：
+
+```c++
+Vector folly(3.0, 4.0);
+Vector foolery(20.0, 30.0, VECTOR::Vector::POL);
+```
+
+标识符POL的作用域为类，因此类定义可使用未限定的名称。但全限定名为VECTOR::Vector::POL，因为POL是在Vector类中定义的，而Vector是在名称空间VECTOR中定义的。
+
+operator<<()函数也是用模式来确定如何显式值。由于operator<<()是一个友元函数，而不在作用域内，因此必须使用Vector::RECT，而不能直接使用RECT。因为友元函数在名称空间VECTOR中，因此无需使用全限定名VECTOR::Vector::RECT。
+
+### 11.5.2 为Vector类重载算术运算符
+
+在使用x,y坐标时，将两个矢量相加将非常简单，只要将两个x分量相加，得到最终的x分量，将两个y分量相加得到y分量即可。根据描述，可以使用如下代码：
+
+```c++
+Vector Vector::operator+(const Vector & b) const
+{
+    Vector sum;
+    sum.x = x + b.x;
+    sum.y = y + b.y;
+    return sum;
+}
+```
+
+如果对象只存储x和y分量，则这很好。遗憾的是，上述代码无法设置极坐标值。可以通过添加另外一些代码来解决这个问题：
+
+```c++
+Vector Vector::operator+(const Vector & b) const
+{
+    Vector sum;
+    sum.x = x + b.x;
+    sum.y = y + b.y;
+    sum.set_ang(sum.x, sum.y);
+    sum.set_mag(sum.x, sum.y);
+    return sum;
+}
+```
+
+然而，使用构造函数来完成这种工作，将更简单，更可靠：
+
+```c++
+Vector Vector::operator+(const Vecotr & b) const
+{
+    return Vector(x + b.x, y + b.y);
+}
+```
+
+上述的代码将新的x和y分量传递给Vector构造函数是，而后者将使用这些值来创建无名的新对象，并返回这个对象的副本。这确保了新的Vector对象是根据构造函数的标准规则创建的。
+
+**提示：**如果方法通过计算得到一个新的类对象，则应考虑是否可以使用类构造函数来完成这种工作。
+
+**1. 乘法**
+
+将矢量与一个数相乘，将使该矢量加长或缩短。因此，将矢量乘以3得到的矢量的长度为原来的三倍，而角度不变。要在Vector类中实现矢量的这种行为很容易。对于极坐标，只要将长度进行伸缩，并保持角度不变；对于直角坐标，只需要将x和y分量进行伸缩。
+
+```
+Vector  Vector::operator*(double n) const
+{
+    return Vector(x * n, y * n);
+}
+```
+
+和重载加法一样，上述代码允许构造函数使用新的x和y分量来创建正确的Vector对象。上述函数用于处理Vector值和double相乘。可以像Time示例那样，使用一个内联友元函数来处理double与Vector相乘：
+
+```
+friend Vector Vector::operator*(double n, const Vector & a) 
+{
+    return a * n;
+}
+```
+
+**2. 对已重载的运算符进行重载**
+
+在C++中，-(负号)运算符有两种函数。首先，使用两个操作数，它是减法运算符。其次，使用一个操作数时，它是负号运算符。对于矢量来说，这两种操作都是有意义的，因此Vector类有这两种操作。
+
+要从矢量A中减去矢量B，只要将分量相减即可，因此重载减法与重载加法相似。
+
+操作的顺序非常重要。下面的语句：
+
+```
+diff = v1 - v2;
+```
+
+将转换为下面的成员函数调用：
+
+```
+diff = v1.operator-(v2);
+```
+
+这意味着将从隐私矢量参数减去显式参数创建的矢量。
+
+接下来，看一元负号运算符，它只有一个操作数。下面时定义：
+
+```
+Vector Vector::operator-() const
+{
+    return Vector(-x, -y);
+}
+```
+
+现在，operator-()有两种不同的定义，这是可行的，因为它们的特征标(参数)不同。
+
+### 11.5.3 对于实现的说明
+
+Vector类中，所有接口都只要能够显示这两种表示，并返回各个值。内部实现可以完全不同。因此，可以只存储x和y分量，而返回矢量的长度的magval()方法可以根据x和y的值来计算出长度，而不是查找对象中存储的这个值。这种方法改变了实现，但用户接口没有改变。将接口和实现分离时OOP的目标之一。
+
+这两种实现各有利弊。存储数据意味着对象将占据更多的内存；但查找数据的速度比较快。如果应用经常访问矢量的这两种表示，则这个例子采用的实现比较合适。
+
+### 11.5.4 使用Vector来模拟随机漫步
+
+程序11.15是一个小程序，它使用了Vector类。该程序模拟了著名的醉鬼走路问题。实际上，醉鬼被认为是一个有许多健康问题的人，而不是大家娱乐消遣的谈资，因此这个问题通常被成为随机漫步问题。其意思，将一个领到街灯柱下。这个人开始走动，但没走一部的方向都是随机的。这个问题的一种表述时，这个人走到离灯柱50英尺的地方需要多少步。从矢量的角度，这相当于不断将方向随机的矢量相加，直到长度超过50英尺。
+
+程序11.15 randwalk.cpp
+
+```
+#include <iostream>
+#include "vector.h"
+#include <cstdlib> // rand(), srand()
+#include <ctime> // time()
+
+int main()
+{
+    using namespace std;
+    using VECTOR::Vector;
+    srand(time(0));
+    double direction;
+    Vector step;
+    Vector result(0.0, 0.0);
+    unsigned long steps = 0;
+    double target;
+    double dstep;
+    cout << "Enter target distance (q to quit):";
+    while (cin >> target)
+    {
+        cout << "Ener step length: ";
+        if (!(cin >> dstep))
+            break;
+        while(result.magval() < target)
+        {
+            direction = rand() % 360;
+            step.reset(dstep, direction, Vector::POL);
+            result = result + step;
+            steps++;
+        }
+        cout << "After " << steps << "steps, the subject "
+            "has the following location:\n";
+        cout << result << endl;
+        result.polar_mode();
+        cout << "or\n" << result << endl;
+        cout << "Average outward distance per step = "
+            << result.magval() / steps << endl;
+        steps = 0;
+        result.reset(0.0, 0.0);
+        cout << "Enter target distance (q to quit):";
+    }
+    cout << "Bye!\n";
+    cin.clear();
+    while (cin.get() != '\n')
+        continue;
+    return 0;
+}
+```
+
+输出：
+
+```
+Enter target distance (q to quit):100
+Ener step length: 5
+After 246steps, the subject has the following location:
+(x, y) = (85.9784, 54.1236)
+or
+(m, a) = (101.596, 0.56183)
+Average outward distance per step = 0.41299
+Enter target distance (q to quit):200     
+Ener step length: 5
+After 1087steps, the subject has the following location:
+(x, y) = (-57.2303, 193.208)
+or
+(m, a) = (201.506, 1.85877)
+Average outward distance per step = 0.185378
+Enter target distance (q to quit):q
+Bye!
+```
+
+**程序说明**
+
+首先，需要指出的时，在程序11.15中使用VECTOR名称空间非常方便。下面using声明使Vector类的名称可用：
+
+```
+using VECTOR::Vector;
+```
+
+接下来谈谈随机数。标准ANSI C库(C++也有)中有一个rand()函数，它返回一个从0到某个值(取决于实现)之间的随机数。该程序使用求模运算来获得一个0~359的角度值。
+
+rand()函数将一种算法用于一个初始种子值来获得随机数，该随机数用在下一次函数调用的种子，以此类推。这些数实际上使伪随机数，因此10次连续的调用通常生成10个同样的随机数。然而，srand()函数允许覆盖默认的种子值，重新启动另一个随机序列。该程序使用time(0)的返回值来设置种子。time(0)返回当前时间，通常从某一个日期开始的秒数。因此，下面的语句在每次运行程序时，都将设置不同的种子，是随机数看上去更为随机：
+
+```
+srand(time(0));
+```
+
+头文件cstdlib包含了srand()和rand()的原型，而ctime包含了time()的原型。
+
+顺便说一句，在将一系列位置存储到文件中很容易。首先包含头文件fstream，声明一个ofstream对象，将其同一个文件关联起来：
+
+```
+#include <fstream>
+
+ofstream fout;
+fout.open("thewalk.txt");
+
+four << resutl << endl;
+```
+
+这将调用友元函数operator<<(fout, result)，导致引用参数os指向fout，从而将输出写入文件中。
+
 ## 11.6 类的自动转换和强制类型转换
 
 **相关章节**：第3章中的类型转换和磅转换为英石的程序。
