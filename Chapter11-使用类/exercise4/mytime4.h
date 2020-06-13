@@ -15,11 +15,12 @@ public:
     void AddMin(int m);
     void AddHr(int h);
     void Reset(int h = 0, int m = 0);
-    Time operator+(const Time &t) const;
+    // Time operator+(const Time &t) const;
     friend Time operator+(const Time &t1, const Time &t2);
-    Time operator-(const Time &t) const;
+    // Time operator-(const Time &t) const;
     friend Time operator-(const Time &t1, const Time &t2);
-    Time operator*(double n) const;
+    // Time operator*(double n) const;
+    friend Time operator*(const Time &t1, double mult);
     friend Time operator*(double m, const Time &t)
     {
         return t * m;
