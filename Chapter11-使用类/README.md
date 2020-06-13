@@ -1483,3 +1483,628 @@ four << resutl << endl;
 ## 11.6 类的自动转换和强制类型转换
 
 **相关章节**：第3章中的类型转换和磅转换为英石的程序。
+
+本节讨论如何处理用户定义类型的转换。首先，复习一下C++如何处理内置类型转换的。将一个标准类型变量的值赋给另一个标准类型的变量时，如果这两种类型兼容，则C++自动将这个值转换为接收变量的类型。例如，下面的语句都将导致类型转换：
+
+```
+long count = 8;
+double time = 11;
+int side = 3.33;
+```
+
+上述赋值语句是可行的，因为在C++看来，各种数据类型都表示相同的东西—-一个数字，同时C++包含用于转换的内置规则。这些转换将降低精度。
+
+C++语言不自动转换不兼容的类型。例如，下面的语句是非法的，因为左边是指针类型，而右边是数字：
+
+```
+int *p = 10;
+```
+
+虽然计算机内部可能使用证数来表示地址，但从概念上，整数和指针完全不同。例如，不能计算指针的平方。然而，在无法自动转换是，可以使用强制类型转换：
+
+```
+int *p = (int *) 10;
+```
+
+上述语句将10强制转换为int指针类型，将指针设置为地址10。
+
+可以将类定义成为与基本类型或另一个类相关，使得从一个类型转换为另一个类型是有意义的。在这种情况下，程序员可以指示C++如何自动进行转换，或通过强制类型转换来完成。
+
+为了说明这个如何进行的，我们将第3章的磅转换为英石的程序改写为类形式。首先，设计一个合适的类型，我们基本上是以两种方式(磅和英石)来表示重量。对于在一个实体中包含一个概念的两种表示来说，类提供了一种非常好的方式。因此可以将重量的两种方法表示放在同一个类中，然后提供以这两种方式表达重量的类方法。
+
+程序11.16 stonewt.h
+
+```c++
+#ifndef STONEWT_H_
+
+#define STONEWT_H_
+class Stonewt
+{
+private:
+    enum {Lbs_per_stn = 14};
+    int stone;
+    double pds_left;
+    double pounds;
+public:
+    Stonewt(double lbs);						// 需要关注的构造函数
+    Stonewt(int stn, double lbs);
+    Stonewt();
+    ~Stonewt();
+    void show_lbs() const;
+    void show_stn() const;
+
+};
+
+#endif
+```
+
+对于定义特定的常量来说，如果它们是整数，enum提供了一种方便的途径。也可以采用下面的方法：
+
+```c++
+static const int Lbs_per_stn = 14;
+```
+
+Stonewt有3个构造函数，让您能够将Stonewt对象初始化为一个浮点数（单位为磅）或两个浮点数（分别代表英石和磅）。也可以创建Stonewt对象，而不进行初始化。
+
+Stonewt提供了两个显示函数，一个以磅为单位显示重量，另一个以英石和磅为单位显示重量。
+
+程序11.17sthonewt.cpp
+
+```c++
+#include <iostream>
+#include "stonewt.h"
+using std::cout;
+
+Stonewt::Stonewt(double lbs)
+{
+    stone = int (lbs) / Lbs_per_stn;
+    pds_left = int (lbs) % Lbs_per_stn;
+    pounds = lbs;
+}
+
+Stonewt::Stonewt(int stn, double lbs)
+{
+    stone = stn;
+    pds_left = lbs;
+    pounds = stn * Lbs_per_stn + lbs;
+}
+
+Stonewt::Stonewt()
+{
+    stone = pounds = pds_left = 0;
+}
+
+Stonewt::~Stonewt()
+{}
+
+void Stonewt::show_stn() const
+{
+    cout << stone << " stone, " << pds_left << " pounds\n";
+}
+
+void Stonewt::show_lbs() const
+{
+    cout << pounds << " pounds\n";
+}
+```
+
+因为Stonewt对象表示一个重量，所以可以提供一些将整数或浮点数转换为Stonewt对象的方法。我们已经这样做了！在C++中，接受一个参数的构造函数为将类型与该参数相同的值转换提供了蓝图。因此，下面的构造函数用于将double类型转换为Stonewt类型：
+
+```c++
+Sthonewt(double lbs);
+```
+
+即，可以编写如下代码：
+
+```c++
+Stonewt myCat;
+myCat = 19.6;
+```
+
+程序将使用构造函数Stonewt(double)来创建一个临时的Stonewt对象，并将19.6作为初始化值。随后，采用逐成员赋值方式将该临时对象的内容赋值到myCat中。这一过程成为隐式转换，因为它是自动进行的，而不需要显式强制类型转换。
+
+**只有接受一个参数的构造函数才能作为转换函数。**下面的构造函数有两个参数，因此不能用来转换类型：
+
+```c++
+Stonewt(int stn, double lbs);
+```
+
+然而，如果给第二个参数提供默认值，它便可用于转换int:
+
+```c++
+Stonewt(int stn, double lbs = 0);
+```
+
+将构造函数用作自动类型转换函数似乎是一项不错的特定。然而，当程序员拥有更丰富的C++经验时，将发现这种自动特性并非总是合乎需要的，因为这会导致意外的类型转换。因此，C++增加了**关键字explicit用于关闭这种自动特性**。即，可以这样声明构造函数：
+
+```c++
+explicit Stonewt(double lbs);
+```
+
+这将关闭上述示例中介绍的隐式转换，但仍然允许显式转换，即显式强制转换：
+
+```c++
+Stonewt myCat;
+myCat = 19.6; //错误语法
+myCat = (Stonewt)19.6;
+myCat = Stonewt(19.6);
+```
+
+**注意：**只接受一个参数的构造函数时定义了从参数类型到类类型的转换。如果使用关键字explicit限定了这种构造函数，则它智能用于显式转换，否则也可以用于隐式转换。
+
+编译器在什么时候将使用Stonewt(doule)函数呢？如果在声明中使用了关键字explicict，则Stonewt(doule)将只用于显式强制类型转换，否则还可以用于下面的隐式转换：
+
+- 将Stonewt对象初始化为double值时。
+- 将double值赋给Stonewt对象时。
+- 将double值传递给接受Stonewt参数的函数时。
+- 返回值被声明为Stonewt的函数试图返回double值时。
+- 在上述任意一种情况下，使用可转换double类型的内置类型时。
+
+下面详细介绍最后一点。函数原型化提供的参数匹配过程，允许使用Stonewt(doule)构造函数来转换其他数字类型。即，下面两条语句都首先将int转换为double，然后使用Stonewt(double)构造函数。
+
+```c++
+Stonewt Jumbo(7000);
+Jumbo = 73000;
+```
+
+然而，当且仅当转换不存在二义性时，才会进行这种二步转换。即，如果这个类还定义了构造函数Stonewt(long)，则编译器将拒绝这些语句，可能指出：int可被转换为long或double，因此调用存在二义性。
+
+程序11.18使用类的构造函数初始化一些Stonewt对象，并处理类型转换。
+
+程序11.18 stone.cpp
+
+```c++
+#include <iostream>
+#include "stonewt.h"
+using std::cout;
+void display(const Stonewt & st, int n);
+
+int main()
+{
+    Stonewt incognito = 275;					// 使用构造函数初始化
+    Stonewt wolfe(287.5);						  // 和 Stonewt wolfe = 285.7; 相同
+    Stonewt taft(21, 8);
+
+    cout << "The celebrity weighed ";
+    incognito.show_stn();
+    cout << "The detective weighed ";
+    wolfe.show_stn();
+    cout << "The President weighed ";
+    taft.show_lbs();
+    incognito = 276.8;									// 使用构造函数进行转换
+    taft = 325;													// 和 taft = Stonewt(325);
+    cout << "After dinner, the celebrity weighed ";
+    incognito.show_stn();
+    cout << "After dinner , the President weighed ";
+    taft.show_lbs();
+    display(taft, 2);
+    cout << "The wrestler weighed even more.\n";
+    display(422, 2);									// 需要关注的地方
+    cout << "No stone left unearned\n";
+    return 0;
+}
+
+void display(const Stonewt & st, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Wow! ";
+        st.show_stn();
+    }
+}
+```
+
+输出：
+
+```shell
+The celebrity weighed 19 stone, 9 pounds
+The detective weighed 20 stone, 7 pounds
+The President weighed 302 pounds
+After dinner, the celebrity weighed 19 stone, 10 pounds
+After dinner , the President weighed 325 pounds
+Wow! 23 stone, 3 pounds
+Wow! 23 stone, 3 pounds
+The wrestler weighed even more.
+Wow! 30 stone, 2 pounds
+Wow! 30 stone, 2 pounds
+No stone left unearned
+```
+
+**程序说明**
+
+当构造函数只接受一个参数是，可以使用下面的格式来初始类对象：
+
+```c++
+Stonewt incognito = 275;
+```
+
+这等价于前面介绍过的另外两种格式：
+
+```c++
+Stonewt incognito(275);
+Stonewe incognito = Stonewt(275);
+```
+
+然而，后面两种格式可用于接受多个参数的构造函数。
+
+接下来，注意下面两条赋值语句：
+
+```c++
+incognito = 276.8;
+taft = 325;
+```
+
+第一条赋值语句使用接受double参数的构造函数，将276.8转换为一个Stonewt值，这将把incognito的pounds成员设置为276.8。因为该条语句使用了构造函数，所以还将设置stone和pds_left成员。同样，第二条赋值语句将一个int值转换为double类型，然后使用Stonewt(double)来设置全部3个成员。
+
+最后，注意下面的函数调用：
+
+```c++
+display(422, 2);
+```
+
+display()的原型表明，第一个参数应是Stonewt对象(Stonewt和Stonewt&形参都与Stonewt实参匹配)。遇到int参数时，编译器查找构造函数Stonewt(int)，以便将该int转换为Stonewt类型。由于没有找到这样的构造函数，因此编译器寻找接受其他内置类型的构造函数。Stonewt(double)构造函数满足这种要求，因此编译器将int转换为double，然后使用Stonewt(double)将其转换为一个Stonewt对象。
+
+### 11.6.1 转换函数
+
+程序是将数字转换为Stonewt对象。可以做相反的转换吗？即，是否可以将Stonewt对象转换为double值。如下：
+
+```
+Stonewt wolfe(285.7);
+double host = wolfe;
+```
+
+可以这样做，但不是使用构造函数。**构造函数只用于从某种类型到类类型的转换。**要进行相反的转换，必须使用特殊的C++运算符函数—转换函数。
+
+转换函数是用户定义的强制类型转换，可以像使用强制类型转换那样使用它。例如，如果定义了从Stonewt到double的转换函数，就可以使用如下的转换：
+
+```
+Stonewt wolfe(285.7);
+double host = double (wolfe);
+double thinker = (double) wolfe;
+```
+
+也可以让编译器来决定如何做：
+
+```
+Stonewt wells(20, 3);
+double star = wells;
+```
+
+编译器发现，右侧是Stonewt类型，而左侧是double类型，因此它将查看程序员是否定义了于此匹配的转换函数。
+
+创建转换函数，要转换为typeName类型，需要使用如下形式的转换函数：
+
+```
+operator typeName();
+```
+
+注意以下几点：
+
+- 转换函数必须是类方法；
+- 转换函数不能指定返回类型；
+- 转换函数不能有参数；
+
+例如，转换为double类型的函数的原型如下：
+
+```
+operator double();
+```
+
+要添加将Stonewt转换为int类型和double类型的函数，需要将下面的原型添加到类声明中：
+
+```
+operator int();
+operator double();
+```
+
+程序11.19列出了修改后的类声明：
+
+程序11.19 stonewt1.h
+
+```c++
+#ifndef STONEWT1_H_
+#define STONEWT1_H_
+
+class Stonewt
+{
+private:
+    enum {Lbs_per_stn = 14};
+    int stone;
+    double pds_left;
+    double pounds;
+public:
+    Stonewt(double lbs);
+    Stonewt(int stn, double lbs);
+    Stonewt();
+    ~Stonewt();
+    void show_lbs() const;
+    void show_stn() const;
+    // 转换函数
+    operator int();										// 新知识
+    operator double();							 //  新知识
+};
+
+#endif
+```
+
+程序11.20对两个转换函数进行了定义。注意，虽然没有声明返回类型，这两个函数也就返回所需的值。另外，int转换将带转换的值进行四舍五入为最接近的整数，而不是去掉小鼠部分。例如，如果pounds为114.4，则pounds+0.5等于114.9，int(114.9)等于114。但是，如果pounds为114.6，则pounds+0.5是115.1，而int(115.1)为115。
+
+程序11.20 stonewt1.cpp
+
+```c++
+#include <iostream>
+#include "stonewt1.h"
+using std::cout;
+
+Stonewt::Stonewt(double lbs)
+{
+    stone = int (lbs) / Lbs_per_stn;
+    pds_left = int (lbs) % Lbs_per_stn;
+    pounds = lbs;
+}
+
+Stonewt::Stonewt(int stn, double lbs)
+{
+    stone = stn;
+    pds_left = lbs;
+    pounds = stn * Lbs_per_stn + lbs;
+}
+
+Stonewt::Stonewt()
+{
+    stone = pounds = pds_left = 0;
+}
+
+Stonewt::~Stonewt()
+{}
+
+void Stonewt::show_stn() const
+{
+    cout << stone << " stone, " << pds_left << " pounds\n";
+}
+
+void Stonewt::show_lbs() const
+{
+    cout << pounds << " pounds\n";
+}
+
+Stonewt::operator int()							// 新知识
+{
+    return int (pounds + 0.5);
+}
+
+Stonewt::operator double()				// 新知识
+{
+    return pounds;
+}
+```
+
+程序11.21对新的转换函数进行测试。
+
+程序11.21 stone1.cpp
+
+```c++
+#include <iostream>
+#include "stonewt1.h"
+
+int main()
+{
+    using std::cout;
+    Stonewt poppins(9, 2.8);
+    double p_wt = poppins;																	// 新知识
+    cout << "Convert to double = ";
+    cout << "Poppins: " << p_wt << " pounds.\n";
+    cout << "Convert to int = ";
+    cout << "Poppins: " << int(poppins) << " pounds.\n";		// 新知识
+    return 0;
+}
+```
+
+输出：
+
+```shell
+Convert to double = Poppins: 128.8 pounds.
+Convert to int = Poppins: 129 pounds.
+```
+
+**自动应用类型转换**
+
+程序11.21中将int(poppins)和cout一起使用。假设省略了显式强制类型转换：
+
+```
+cout << "Poppins: " << poppins << " pounds.\n";
+```
+
+程序将无法进行隐式转换。因为没有指出应转换为int类型还是doubl类型。在缺少信息时，编译器将指出，程序中使用了二义性转换。
+
+如果类只定义了double转换函数，则编译器将接受该语句。这是因为只有一种转换可能，因此不存在二义性。
+
+负责的情况与此类似。对于当前的类深埋来说，编译器将认为下面的语句有二义性而拒绝它：
+
+```
+long gone = poppins; //存在二义性
+```
+
+在C++中，int和double值都可以给赋值给long变量，所以编译器使用任意一个转换函数都是合法的。然而，如果删除了这两个转换函数之一，编译器将接受这条语句。
+
+当类定义了两种或多种的转换是，仍可以使用显式强制类型转换来指出使用哪个转换函数。可以使用下面任何一种强制类型转换表示法：
+
+```
+long gone = (double) poppins;
+long gone = int (poppins);
+```
+
+和转换构造函数一样，转换函数也有其优缺点。提供自动、隐式转换的函数所存在的问题是：在用户不希望进行转换时，转换函数也可能进行转换。如下：
+
+```
+int ar[20];
+Stonewt temp(14, 4);
+int Temp = 1;
+cout << ar[temp] << endl;
+```
+
+原则上，最后使用显式转换，而避免隐式转换。在C++11中，可以使用explicit来关闭隐式转换：
+
+```
+class stonewt    
+{
+...
+    explicit operator int() const;
+    explicit operator double() const;
+};
+```
+
+有了上述声明，需要强制转换时将调用这些运算符。
+
+另一种方法是，用一个功能相同的非转换函数替换该转换函数即可，但仅在被显式地调用时，该函数才会执行。即：
+
+```
+Stonewt::operator int(0 {return int (pounds + 0.5);}
+```
+
+可以替换为：
+
+```
+int Stonewt::Stone_to_int() {return int (pounds + 0.5);}
+```
+
+这样，下面的语句是非法的：
+
+```
+int plb = poppins;
+```
+
+但如果确实需要这种转换，可以这样做：
+
+```
+int plb = poppins.Stone_to_int();
+```
+
+总之，C++为类提供了下面的类型转换：
+
+- 只有一个参数的类构造函数用于将类型与该参数相同的值转换为类类型。
+- 被成为转换函数的特殊成员运算符函数，用于将类对象转换为其他类型。
+
+**注意**：explicit关键字可以关闭以上两种隐私类型转换，但仍可以进行显式强制类型转换。
+
+### 11.6.2 转换函数和友元函数
+
+在讨论Time类时指出过，可以使用成员函数或友元函数来重载加法。处于简化的目的，假设没有定义operator double()转换函数，可以使用下面的成员函数实现加法：
+
+```c++
+Stonewt Stonewt::operator+(const Stonewt & st) const
+{
+    double pds = pounds + st.pounds;
+    Stonewt sum(pds);
+    return sum;
+}
+```
+
+也可以将加法作为友元函数来实现，如下：
+
+```c++
+Stonewt operator+(const stonewt & st1, const stonewt & st2)
+{
+    double pds = st1.pounds + st2.pounds;
+    Stonewt sum(pds);
+    return sum;
+}
+```
+
+注意，可以提供友元函数定义或成员函数定义，但不能都提供。上面任何一种格式都允许如下操作：
+
+```c++
+Stonewt jennySt(9, 12);
+Stonewt bennySt(12, 8);
+Stonewt total = jennySt + bennySt;
+```
+
+另外，如果提供了Stonewt(double)构造函数，则可以这样做：
+
+```c++
+Stonewt jennySt(9, 12);
+double kennyD = 176.0;
+Stonewt total = jennySt + kennyD;
+```
+
+但只有友元函数才允许如下这样做：
+
+```
+Stonewt jenneySt(9, 12);
+double pennyD = 146.0;
+Stonewt total = pennyD + jennySt;
+```
+
+这样因为：
+
+```
+Stonewt total = pennyD + jennySt;
+```
+
+只能被转换为：
+
+```
+total = operator+(pennyD, jennySt);
+```
+
+第一个参数pennyD为double类型，因此调用构造函数Stonewt(double)，将它转换为Stonewt对象。
+
+然而不能调用成员函数将jennySt和peenyD相加。将加法语法转换为函数将类似于下面这样：
+
+```
+total = pennyD.operator+(jennySt);
+```
+
+这没有意义，因为只有类对象才可以调用成员函数。C++不会试图将pennyD转换为Stonewt对象。
+
+**将对成员函数参数进行转换，而不是调用成员函数的对象。**
+
+**经验告诉我们，将加法定义为友元可以让程序更容易适应自动类型转换。原因在于，两个操作数都成为函数参数，因此与函数原型匹配。**
+
+**实现加法时的选择**
+
+要将double量和Stonewt量相加，有两种选择。第一种方法是将下面的的函数定义为友元函数，让Stonewt(double)构造函数将double类型的参数转换为Stonewt类型的参数：
+
+```
+operator+(const Stonewt &, const Stonewt &);
+```
+
+第二种方法是，将加法运算符重载为一个显式使用doulbe类型参数的函数：
+
+```
+Stonewt operator+(double x);
+friend Stonewt operator+(double x, Stonewt & s);
+```
+
+这样，下面的语句将与成员函数operator+(doulbe)完全匹配：
+
+```
+total = jennySt + kennyD;
+```
+
+而下面的语句将于友元函数operator+(double, Stonewt &)完全匹配：
+
+```
+total = kennyD + jennySt;
+```
+
+每次中方法都有其优点。第一种方法使程序更简洁，因为定义的函数较少。缺点是，每次需要转换时，都将调用转换构造函数，这增加时间和内存开销。第二种方法刚好相反，使得程序较长，但运行速度快。
+
+## 11.7 总结
+
+访问私有成员：
+
+- 友元函数： friend
+- 成员函数
+
+运算符重载： operator+()
+
+类型转换：
+
+- 自动类型转换
+- 强制类型转换
+
+关闭隐私类型转换：explicit
+
+转换构造函数: 只有一个参数的构造函数，或者有默认值参数的构造函数
+转换函数： operator int()
