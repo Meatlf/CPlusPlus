@@ -1319,7 +1319,7 @@ Vector Vector::operator+(const Vecotr & b) const
 
 将矢量与一个数相乘，将使该矢量加长或缩短。因此，将矢量乘以3得到的矢量的长度为原来的三倍，而角度不变。要在Vector类中实现矢量的这种行为很容易。对于极坐标，只要将长度进行伸缩，并保持角度不变；对于直角坐标，只需要将x和y分量进行伸缩。
 
-```
+```c++
 Vector  Vector::operator*(double n) const
 {
     return Vector(x * n, y * n);
@@ -1328,7 +1328,7 @@ Vector  Vector::operator*(double n) const
 
 和重载加法一样，上述代码允许构造函数使用新的x和y分量来创建正确的Vector对象。上述函数用于处理Vector值和double相乘。可以像Time示例那样，使用一个内联友元函数来处理double与Vector相乘：
 
-```
+```c++
 friend Vector Vector::operator*(double n, const Vector & a) 
 {
     return a * n;
@@ -1343,21 +1343,22 @@ friend Vector Vector::operator*(double n, const Vector & a)
 
 操作的顺序非常重要。下面的语句：
 
-```
+```c++
 diff = v1 - v2;
 ```
 
 将转换为下面的成员函数调用：
 
-```
+```c++
 diff = v1.operator-(v2);
 ```
 
-这意味着将从隐私矢量参数减去显式参数创建的矢量。
+这意味着将从隐式矢量参数减去显式参数创建的矢量。
 
-接下来，看一元负号运算符，它只有一个操作数。下面时定义：
+接下来，看一元负号运算符，它只有一个操作数。下面是定义和定义：
 
-```
+```c++
+Vector Vector::operator-() const;
 Vector Vector::operator-() const
 {
     return Vector(-x, -y);
@@ -1368,7 +1369,7 @@ Vector Vector::operator-() const
 
 ### 11.5.3 对于实现的说明
 
-Vector类中，所有接口都只要能够显示这两种表示，并返回各个值。内部实现可以完全不同。因此，可以只存储x和y分量，而返回矢量的长度的magval()方法可以根据x和y的值来计算出长度，而不是查找对象中存储的这个值。这种方法改变了实现，但用户接口没有改变。将接口和实现分离时OOP的目标之一。
+Vector类中，所有接口都只要能够显示这两种表示，并返回各个值。内部实现可以完全不同。因此，可以只存储x和y分量，而返回矢量的长度的magval()方法可以根据x和y的值来计算出长度，而不是查找对象中存储的这个值。这种方法改变了实现，但用户接口没有改变。**将接口和实现分离时OOP的目标之一。**
 
 这两种实现各有利弊。存储数据意味着对象将占据更多的内存；但查找数据的速度比较快。如果应用经常访问矢量的这两种表示，则这个例子采用的实现比较合适。
 
@@ -1378,7 +1379,7 @@ Vector类中，所有接口都只要能够显示这两种表示，并返回各�
 
 程序11.15 randwalk.cpp
 
-```
+```c++
 #include <iostream>
 #include "vector.h"
 #include <cstdlib> // rand(), srand()
@@ -1388,7 +1389,7 @@ int main()
 {
     using namespace std;
     using VECTOR::Vector;
-    srand(time(0));
+    srand(time(0));					// 设置随机数种子
     double direction;
     Vector step;
     Vector result(0.0, 0.0);
@@ -1429,7 +1430,7 @@ int main()
 
 输出：
 
-```
+```shell
 Enter target distance (q to quit):100
 Ener step length: 5
 After 246steps, the subject has the following location:
@@ -1452,7 +1453,7 @@ Bye!
 
 首先，需要指出的时，在程序11.15中使用VECTOR名称空间非常方便。下面using声明使Vector类的名称可用：
 
-```
+```c++
 using VECTOR::Vector;
 ```
 
@@ -1460,7 +1461,7 @@ using VECTOR::Vector;
 
 rand()函数将一种算法用于一个初始种子值来获得随机数，该随机数用在下一次函数调用的种子，以此类推。这些数实际上使伪随机数，因此10次连续的调用通常生成10个同样的随机数。然而，srand()函数允许覆盖默认的种子值，重新启动另一个随机序列。该程序使用time(0)的返回值来设置种子。time(0)返回当前时间，通常从某一个日期开始的秒数。因此，下面的语句在每次运行程序时，都将设置不同的种子，是随机数看上去更为随机：
 
-```
+```c++
 srand(time(0));
 ```
 
@@ -1468,7 +1469,7 @@ srand(time(0));
 
 顺便说一句，在将一系列位置存储到文件中很容易。首先包含头文件fstream，声明一个ofstream对象，将其同一个文件关联起来：
 
-```
+```c++
 #include <fstream>
 
 ofstream fout;
