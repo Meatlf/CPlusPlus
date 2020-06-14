@@ -22,6 +22,8 @@
 
 **小结**：本节介绍了通过程序员自己提供**复制构造函数**和**赋值运算符**，使类能够正确管理类对象使用的内存。
 
+C++在分配内存时，希望程序在运行时决定内存分配，而不是在编译时决定。这样，可根据程序的需要，而不是根据一系列严格的存储类型来使用内存。C++使用new和delete运算符来动态控制内存。遗憾的时，在类中使用这些运算符将导致许多新的编程问题。在这种情况下，析构函数将时必不可少的，而不再是可有可无的。
+
 ### 12.1.1 复习示例和静态类成员
 
 **小结**：本小节通过例子说明**编译器自动生成的成员函数**（如**复制构造函数**)会对程序造成影响，但是本小节没有给出具体的原因以及解决方法，而是留给后面的小节进行介绍。
@@ -29,6 +31,292 @@
 **结论**：构造函数中new和析构函数中delete要成对出现。
 
 **相关章节**：第16章
+
+首先，通过一个小程序复习一下new和delete的使用。这个程序使用了一个新的存储类型：**静态类成员**。首先，设计一个StringBad类，然后设计一个功能稍强的String类(前面介绍过的C++标准String类，在第16章将更深入讨论它；本章的StringBad和String类将介绍这个类的底层结构)。
+
+StringBad和String类都将包含一个字符串指针和一个表示字符串长度的值。这里使用StringBad和String类，主要是为了更深入了解new和delete和静态类成员的工作原理。因此构造函数和析构函数调用时将显示一些消息，以便能够安全提示来完成操作。另外，将省略一些有用的成员和友元函数，以简化类接口。
+
+为什么将它命名为StringBad呢？这是为了表示提醒，StringBad是一个还没有开发好的示例。这是使用动态内存分配来开发类的第一步，它正确第完成了一些显而易见的工作。例如，它在构造函数和析构函数种正确地使用了new和delete。它其实不会执行有害操作，但省略了一些有益的功能。
+
+程序12.1 stringbad.h
+
+```c++
+#ifndef STRINGBAD_H_
+#define STRINGBAD_H_
+
+class StringBad
+{
+private:
+    char * str;					//新知识
+    int len;
+    static int num_strings;		// 新知识
+public:
+    StringBad(const char * s);
+    StringBad();
+    ~StringBad();
+    friend std::ostream & operator<<(std::ostream & os, const StringBad & st);
+};
+
+#endif
+```
+
+StringBad类是一个不太完整的类，通过了解这个存在的问题，将有助于您理解和记住后面将其转换为功能更强大的String类时，所做的不明显的修改。
+
+对这个声明，需要注意两点。**首先，它使用char指针来表示姓名。这意味着类声明没有字符串本身分配存储空间，而是在构造函数种使用new来为字符串分配空间。这避免了在类声明中预先定义字符串的长度。**
+
+**其次，将num_strings成员声明为静态类成员。静态类成员有一个特点：无论创建多少个对象，程序都只创建一个静态类变量副本。即，类的所有对象共享同一个静态类成员，就像家中的电话可供全体家庭成员共享一样。**假设创建了10个StringBad对象，将有10个str成员和10个len成员，但只有一个共享的num_strings成员。这对于所有类对象都具有相同的类私有数据非常方便。例如，num_strings成员可以记录所创建的对象数目。
+
+注意，程序12.1使用num_strings成员，只是为了方便说明静态数据成员，并指出潜在的编程问题，字符串通常并不需要这样的成员。
+
+程序12.2中类方法实现，演示了**如何使用指针和静态成员**。
+
+程序12.2 stringbad.cpp
+
+```c++
+#include <iostream>
+#include <cstring>
+#include "stringbad.h"
+
+using std::cout;
+
+int StringBad::num_strings = 0;
+
+StringBad::StringBad(const char * s)
+{
+    len = std::strlen(s);
+    str = new char[len+1];							// 新知识
+    std::strcpy(str, s);
+    num_strings++;
+    cout << num_strings << ": \"" << str
+        << "\" object created\n";
+}
+
+StringBad::StringBad()
+{
+    len = 4;
+    str = new char[4];								
+    std::strcpy(str, "C++");
+    num_strings++;
+    cout << num_strings << ": \"" << str
+        << " \" default object created\n";
+}
+
+StringBad::~StringBad()
+{
+    cout << "\"" << str << "\" object deleted, ";
+    --num_strings;
+    cout << num_strings << " left\n";
+    delete [] str;									// 新知识
+}
+
+std::ostream & operator<<(std::ostream & os, const StringBad & st) 
+{
+    os << st.str;
+    return os;
+}
+```
+
+首先，注意程序12.2中的下面一条语句：
+
+```c++
+int StringBad::num_strings = 0;
+```
+
+这条语句将静态成员num_strings的值初始化为零。**注意，不能在类声明中初始化静态成员变量，这是因为声明描述了如何分配内存，但并不分配内存。**可以使用这种格式来创建对象，从而分配和初始化内存。**对于静态成员，可以在类声明之外使用单独的语句来进行初始化，这是因为静态类成员是单独存储的，而不是对象的组成部分。请注意，初始化语句指出了类型，并使用了作用域运算符，但没有使用关键字static。**
+
+初始化在方法文件中，而不是在类声明文件中进行，这是因为类声明位于头文件中，程序可能将头文件包括在其他几个文件中。如果在头文件中进行初始化，将出现多个初始化语句副本，从而引起错误。
+
+对于不能再类声明中初始化静态数据成员的一种例外情况(将第10章)是，静态成员为const整数类型或枚举类型。
+
+**注意：**静态数据成员再类声明中声明，在包含类方法的文件中初始化。初始化时使用作用域运算符来指出静态成员所属的类。但如果静态成员是const整数类型或枚举类型，则可以在类声明中初始化。
+
+接下来，注意到每个构造函数都包含表达式num_strings++，这确保程序每创建一个新对象，共享变量num_strings的值都增加1，从而记录StringBad对象的总数。另外，析构函数包含表达式--num_strings，因此StringBad类也将跟踪对象被删除的情况，从而使num_strings成员的值是最新的。
+
+现在来看程序12.2中的第一个构造函数，它使用一个常规C字符串来初始化String对象：
+
+```c++
+StringBad::StringBad(const char * s)
+{
+    len = std::strlen(s);
+    str = new char[len+1];
+    std::strcpy(str, s);
+    num_strings++;
+    cout << num_strings << ": \"" << str
+        << "\" object created\n";
+}
+```
+
+类成员str是一个指针，因此构造函数必须提供内存来存储字符串。初始化对象时，可以给构造函数创建一个字符串指针：
+
+```c++
+String boston("Boston");
+```
+
+构造函数必须分配足够的内存来存储字符串，然后将字符串复制到内存中，下面介绍其中的每一个步骤：
+
+1）首先，使用strlen()函数计算字符串的长度，并对len成员进行初始化；
+
+2）接着，使用new分配足够的空间来保存字符串，然后将新内存的地址赋给str成员。(strlen()返回字符串长度，但不包括末尾的空字符，因此构造函数将len加1，是分配的内存能够存储包含空字符的字符串。)
+
+3）接着，构造函数使用strcpy()函数将传递的字符串赋值到新的内存中，并更新对象技术；
+
+4）最后，构造函数显示当前的对象数目和当前对象中存储的字符串。
+
+**要理解这种方法，必须知道字符串并不保存在对象中。字符串单独保存在堆内存中，对象仅保存了指出哪里去查找字符串的信息。**
+
+不能这样做：
+
+```c++
+str = s;
+```
+
+这只保存了地址，没有创建字符串副本。
+
+默认构造函数与此相似，但它提供了一个默认字符串：”C++”。
+
+析构函数中包含了示例中对处理类来说重要的东西：
+
+```c++
+StringBad::~StringBad()
+{
+    cout << "\"" << str << "\" object deleted, ";
+    --num_strings;
+    cout << num_strings << " left\n";
+    delete [] str;
+}
+```
+
+该析构函数首先指出自己何时被调用。这部分包含了丰富的信息，但并不是必不可少的。然而，delete语句确实至关重要的。str成员指向new分配的内存。当StrinBad对象过期时，str指针也将过期。但str指向的内存仍被分配，除非使用delete将其释放。删除对象可以释放对象本身占用的内存，但并不能自动释放属于对象成员的指针指向的内存。因此，必须使用析构函数。在析构函数中出用delete语句可确保对象过期时，由构造函数使用new分配的内存被释放。
+
+**警告：**在构造函数中使用new来分配内存时，必须在相应的析构函数中使用delete来释放内存。如果使用new[]来分配内存，则应使用delete[]来释放内存。
+
+程序12.3演示了StringBad的构造函数和析构函数何时运行及如何运行。该程序将对象放在一个内部代码块中，因为析构函数将在定义对象的代码块执行完毕时调用。如果不这样做，析构函数将在mian()函数执行完毕时调用，导致您无法在执行窗口关闭时看到析构函数显示的信息。
+
+程序12.3 vegnews.cpp
+
+```c++
+#include <iostream>
+#include "stringbad.h"
+using namespace std;
+
+void callme1(StringBad &);
+void callme2(StringBad);
+
+int main()
+{
+    {
+        cout << "Starting an inner block.\n";
+        StringBad headline1("Celery Stalks at Midnight");
+        StringBad headline2("Lettuce Prey");
+        StringBad sports("Spinach Leaves Bowl for Dollars");
+        cout << "headline1: " << headline1 << endl;
+        cout << "headline2: " << headline2 << endl;
+        cout << "sports: " << sports << endl;
+        callme1(headline1);
+        cout << "headline1: " << headline1 << endl;
+        callme2(headline2);									// 新知识,复制构造函数
+        cout << "headline2: " << headline2 << endl;
+        cout << "Initialize one object to anoither:\n";
+        StringBad sailor = sports;
+        cout << "sailor: " << sailor << endl;
+        cout << "Assign one object to another:\n";
+        StringBad knot;
+        knot = headline1;
+        cout << "knot: " << knot << endl;
+        cout << "Exiting the block.\n";
+    }
+    cout << "End fo main()\n";
+    return 0;
+}
+
+void callme1(StringBad & rsb)
+{
+    cout << "String passed by reference:\n";
+    cout << " \"" << rsb << "\"\n";
+}
+
+void callme2(StringBad sb)
+{
+    cout << "String passed by value:\n";
+    cout << " \"" << sb << "\"\n";
+}
+```
+
+程序输出：
+
+```c++
+Starting an inner block.
+1: "Celery Stalks at Midnight" object created
+2: "Lettuce Prey" object created
+3: "Spinach Leaves Bowl for Dollars" object created
+headline1: Celery Stalks at Midnight
+headline2: Lettuce Prey
+sports: Spinach Leaves Bowl for Dollars
+String passed by reference:
+ "Celery Stalks at Midnight"
+headline1: Celery Stalks at Midnight
+String passed by value:
+ "Lettuce Prey"
+"Lettuce Prey" object deleted, 2 left
+headline2: 
+Initialize one object to anoither:
+sailor: Spinach Leaves Bowl for Dollars
+Assign one object to another:
+3: "C++ " default object created
+knot: Celery Stalks at Midnight
+Exiting the block.
+"Celery Stalks at Midnight" object deleted, 2 left
+"Spinach Leaves Bowl for Dollars" object deleted, 1 left
+"" object deleted, 0 left
+*** Error in `./file': double free or corruption (fasttop): 0x0000000001e94060 ***
+======= Backtrace: =========
+```
+
+注意：StringBad的第一个版本有许多故意留下的缺陷，这些缺陷使得输出是不确定的。例如，有些编译器无法编译它等等文件。
+
+输出中出现的各种非标准字符随系统而异，这些字符表明，StringBad类是一个糟糕的类。另一种迹象是对象计数为负(本文中由于编译器不同原因，没有出现负数，就出现异常)。在使用较新的编译器和操作系统的机器上运行时，该程序通常会在显示还有-1之前对象的信息之前中断，而有些这样的机器将报告通用保护存储(GPF)。GPF表明程序试图访问禁止它访问的内存单元。
+
+**程序说明**
+
+之前所有运行正常，直到执行到如下代码：
+
+```c++
+callme2(headline2);
+cout << "headline2: " << headline2 << endl;
+```
+
+这里，callme2()按值(而不是按引用)创建headline2，结果表明这是一个严重的问题！
+
+```shell
+String passed by value:
+ "Lettuce Prey"
+"Lettuce Prey" object deleted, 2 left
+headline2:
+```
+
+首先，**将headline2作为函数参数来传递从而导致析构函数被调调用**。其次，虽然按值传递可以防止原始参数被修改，但实际上函数已使用原始字符串无法识别，导致显示一些非标准字符(在此没有显示任何字符)。
+
+因为自动存储对象被删除的顺序与创建顺序相反，所以最先删除的3个对象是knots、sailor和sports。删除knots和sailor时是正常的，但在删除sports时，字符串变成空了。对于sports，程序只使用它来初始化sailor，但这种操作修改了sports。最后被删除的两个对象(headline2和headline1)已经无法识别。这些字符串在被删除之前，有些操作将它们搞乱了。
+
+对象计数也会出错，这是因为如下代码；
+
+```
+StringBad sailor = sports;
+```
+
+等效于如下的语句：
+
+```c++
+StringBad sialor = StringBad(sports);
+```
+
+因为sports的类型为StringBad，因此相应的构造函数原型如下：
+
+```c++
+StringBad(const StringBad &);
+```
+
+当您使用一个对象来初始化另一个对象时，编译器自动生成上述构造函数(称为**复制构造函数**，因为它们创建对象的一个副本)。自动生成的构造函数不知道需要更新静态类成员num_strings，因此会将计数方案搞乱。
 
 **Q**：请问下面的代码使用的是哪个构造函数？
 
@@ -117,9 +405,13 @@ Klunk(int n = 0) {klunk_ct = n;}	// could match either constructor
 Class_name(const Class_name &);
 ```
 
-​		**说明**：它接受一个指向类对象的常量引用作为参数。
+它接受一个指向类对象的常量引用作为参数。例如，String类的复制构造函数的原型如下：
 
-> 对于复制构造函数,需要知道两点：何时调用和有何功能。后文将做介绍。
+```c++
+StringBad(const String &);
+```
+
+对于复制构造函数,需要知道两点：何时调用和有何功能。后文将做介绍。
 
 #### **3.何时调用复制构造函数**
 
@@ -136,7 +428,13 @@ StringBad also = StringBad(motto);
 StringBad * pStringBad = new StringBad(motto);
 ```
 
-2）**每当程序生成了对象副本时，编译器都将使用复制构造函数**：具体地说，**当函数按值传递对象**（如程序清单12.3中的callme2()）、**函数返回对象**、**编译器生成临时对象**时都会使用复制构造函数。
+2）**每当程序生成了对象副本时，编译器都将使用复制构造函数**：具体地说，**当函数按值传递对象**（如程序清单12.3中的callme2()）、**函数返回对象**、**编译器生成临时对象**时都会使用复制构造函数。例如，将3个Vector对象相加时，编译器可能生成临时的Vector对象来保存中间结果。何时生成临时对象随编译器而异，但无论是哪种编译器，当按值传递和返回对象时，都将调用复制构造函数。具体来说，程序12.3中的函数调用将调用复制构造函数：
+
+```c++
+callme2(headline2);
+```
+
+程序使用复制构造函数初始化sb — callme2()函数的StringBad型形参。
 
 **结论**：由于按值传递将调用复制构造函数，因此应该按引用传递对象。这样可以节省调用构造函数的时间以及存储新对象的空间。
 
@@ -146,7 +444,63 @@ StringBad * pStringBad = new StringBad(motto);
 
 **A**：默认的复制构造函数逐个复制非静态成员（成员复制也称为**浅复制**），复制的是成员的值。
 
+默认的复制构造函数逐个复制非静态成员(成员赋值也称为浅赋值)，复制的是成员的值。在程序12.3中，下述的语句：
+
+```c++
+StringBad sailor = sports;
+```
+
+与下面的代码等效(只是由于私有成员是无法访问的，因此这些代码不能通过编译)：
+
+```c++
+StringBad sailor;
+sailor.str = sports.str;
+sailor.len = sports.len;
+```
+
+如果成员本身就是类对象，则将使用这个类的复制构造函数来复制成员对象。静态成员(如num_strings)不受影响，因为它们属于整个类，而不是各个对象。
+
 ### 12.1.3 回到Stringbad：复制构造函数的哪里出了问题
+
+现在介绍程序12.3的两个异常之处。首先，程序的输出表明，**析构函数的调用次数比构造函数的调用次数多2**(本文由于编译器不同所以出现异常终止，没有多2)，原因可能是程序确实使用默认的复制构造函数另外创建了两个对象。当callme2()被调用时，复制构造函数被用来初始化callme2()的形参，还被用来将对象sailor()初始化为对象sports。默认的复制构造函数不说明其行为，因此它不指出创建过程，也不增加计数器num_strings的值。但析构函数更新了计数，并且在任何对象过期时都将被调用，而不管对象是如何创建的。这是一个问题，因为这意味者程序无法准确地记录对象计数。解决办法是提供一个对计数进行更新的显式复制构造函数：
+
+```c++
+StringBad：：StringBad(const StringBad & s)
+{
+    num_strings++;
+    ...
+}
+```
+
+第二个异常之处更微妙，也更危险，其症状之一是字符串内容出现乱码(本文中为空)：
+
+```c++
+headline2: 
+```
+
+原因在于英石复制构造函数是按值进行复制的。例如，程序12.3，隐式复制构造函数的功能相当于：
+
+```c++
+sailor.str = sports.str;
+```
+
+这里复制的并不是字符串，而是一个指向字符串的指针。即，将sailor初始化为sports后，得到的是两个指向同一个字符串的指针。当operator<<()函数使用指针来显式字符串时，并不会出现问题。但当析构函数被调用时，这将引发问题。析构函数~StringBad释放str指针指向的内存，因此释放sailor的效果如下：
+
+```c++
+delete [] sailor.str;
+```
+
+sailor.str指针指向 “Spinach Leaves Bowl for Dollars”，因为它被赋值为sports.str，而sports.str指向的正是上述字符串。所以delete语句将释放字符串 “Spinach Leaves Bowl for Dollars”占用的内存。
+
+然后，释放sports的效果如下：
+
+```c++
+delete [] sports.str;
+```
+
+sports.str指向的内存已经被sailor的析构函数释放，这将导致不确定的、可能有害的后果。程序12.3中的程序生成受损的字符串，这通常是内存管理不善的表现。
+
+另一个症状是，试图释放内存两次可能导致程序异常终止。例如，在Linux中，g++4.4.1显式消息“double free or corruption”并终止程序运行。，Microsoft Visual C++ 2010（调式模式）显示一个错误消息窗口，指出“Debug Assertion Failed!”。
 
 Q：使用默认复制构造函数有可能出现哪些问题？
 
