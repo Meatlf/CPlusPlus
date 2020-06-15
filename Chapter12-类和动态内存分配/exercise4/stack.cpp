@@ -1,10 +1,17 @@
 #include <cstring>
 #include "stack.h"
 
+Stack::Stack(int n)
+{
+    pitems = new Item[n];
+    top = -1;
+    // size = 0;
+}
+
 Stack::Stack(const Stack &st)
 {
     pitems = new Item[MAX];
-    top = -1;
+    top = st.top;
     memcpy(pitems, st.pitems, st.top * sizeof(Item));
     // size = 0;
 }
@@ -42,7 +49,7 @@ bool Stack::pop(Item &item)
 {
     if (top >= 0)
     {
-        top--;
+        item = pitems[top--];
         return true;
     }
     return false;
@@ -51,7 +58,7 @@ bool Stack::pop(Item &item)
 Stack &Stack::operator=(const Stack &st)
 {
     pitems = new Item[MAX];
-    top = -1;
     memcpy(pitems, st.pitems, st.top * sizeof(Item));
+    top = st.top;
     // size = 0;
 }
