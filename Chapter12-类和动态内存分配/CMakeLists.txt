@@ -8,17 +8,21 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 include_directories("${PROJECT_SOURCE_DIR}/Project0")
 include_directories("${PROJECT_SOURCE_DIR}/Project1")
 include_directories("${PROJECT_SOURCE_DIR}/exercise1")
+include_directories("${PROJECT_SOURCE_DIR}/exercise3")
 
 add_executable(test_project0 ./vegnews.cpp)
 add_executable(test_project1 ./sayings2.cpp)
 add_executable(exercise1_test exercise1_test.cpp)
+add_executable(exercise3_test exercise3_test.cpp)
 
 # 添加子目录
 add_subdirectory(Project0)
 add_subdirectory(Project1)
 add_subdirectory(exercise1)
+add_subdirectory(exercise3)
 
 # 添加库
 target_link_libraries(test_project0 Project0)
 target_link_libraries(test_project1 Project1)
 target_link_libraries(exercise1_test exercise1)
+target_link_libraries(exercise3_test exercise3)
