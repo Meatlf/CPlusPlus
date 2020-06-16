@@ -12,7 +12,7 @@ Stack::Stack(const Stack &st)
 {
     pitems = new Item[MAX];
     top = st.top;
-    memcpy(pitems, st.pitems, st.top * sizeof(Item));
+    memcpy(pitems, st.pitems, (st.top + 1) * sizeof(Item));
     // size = 0;
 }
 
@@ -49,7 +49,8 @@ bool Stack::pop(Item &item)
 {
     if (top >= 0)
     {
-        item = pitems[top--];
+        item = pitems[top];
+        top--;
         return true;
     }
     return false;
