@@ -8,6 +8,7 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 include_directories("${PROJECT_SOURCE_DIR}/example1")
 
 add_executable(example1_test ./use_stuc.cpp)
+add_executable(example2_test ./pairs.cpp)
 
 # 添加子目录
 add_subdirectory(example1)
