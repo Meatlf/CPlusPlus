@@ -15,7 +15,7 @@ int main()
     cin >> yrs;
 
     Wine holding(lab, yrs);
-    // holding.GetBottles();
+    holding.GetBottles();
 
     const int YRS = 3;
     int y[YRS] = {1993, 1995, 1998};

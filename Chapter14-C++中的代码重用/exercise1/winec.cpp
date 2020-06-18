@@ -8,20 +8,11 @@ using std::ostream;
 using std::string;
 
 //public methods
-Wine::Wine(const char *l, int y)
+void Wine::GetBottles()
 {
-    name = l;
-}
-
-Wine::Wine(const char *l, int y, const int yr[], const int bot[])
-{
-}
-
-void GetBottles()
-{
-    // cout << "Enter year: ";
-    // information
-    // cin >> year;
+    cout << "Enter year: ";
+    cin >> information[0][0];
+    cout << year;
 }
 
 int Wine::Label()
