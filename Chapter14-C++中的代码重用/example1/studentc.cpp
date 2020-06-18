@@ -1,27 +1,27 @@
 // studentc.cpp -- Student class using containment
 #include "studentc.h"
-using std::ostream;
 using std::endl;
 using std::istream;
+using std::ostream;
 using std::string;
 
 //public methods
 double Student::Average() const
 {
     if (scores.size() > 0)
-        return scores.sum()/scores.size();  
+        return scores.sum() / scores.size();
     else
         return 0;
 }
 
-const string & Student::Name() const
+const string &Student::Name() const
 {
     return name;
 }
 
-double & Student::operator[](int i)
+double &Student::operator[](int i)
 {
-    return scores[i];         // use valarray<double>::operator[]()
+    return scores[i]; // use valarray<double>::operator[]()
 }
 
 double Student::operator[](int i) const
@@ -30,7 +30,7 @@ double Student::operator[](int i) const
 }
 
 // private method
-ostream & Student::arr_out(ostream & os) const
+ostream &Student::arr_out(ostream &os) const
 {
     int i;
     int lim = scores.size();
@@ -47,29 +47,29 @@ ostream & Student::arr_out(ostream & os) const
     }
     else
         os << " empty array ";
-    return os; 
+    return os;
 }
 
 // friends
 
 // use string version of operator>>()
-istream & operator>>(istream & is, Student & stu)
+istream &operator>>(istream &is, Student &stu)
 {
     is >> stu.name;
-    return is; 
+    return is;
 }
 
 // use string friend getline(ostream &, const string &)
-istream & getline(istream & is, Student & stu)
+istream &getline(istream &is, Student &stu)
 {
     getline(is, stu.name);
     return is;
 }
 
 // use string version of operator<<()
-ostream & operator<<(ostream & os, const Student & stu)
+ostream &operator<<(ostream &os, const Student &stu)
 {
     os << "Scores for " << stu.name << ":\n";
-    stu.arr_out(os);  // use private method for scores
+    stu.arr_out(os); // use private method for scores
     return os;
 }
