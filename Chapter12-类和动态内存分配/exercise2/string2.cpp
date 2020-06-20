@@ -81,14 +81,27 @@ const char &String::operator[](int i) const
     return str[i];
 }
 
-String &operator+(char *c1, String &st2)
+String String::operator+(const String &st) const
 {
-    String st();
-    char* str = new char[len + st2.len + 1];
-    strcat(str, c1);
-    strcat(str, st2.str);
-    st = str;
-    return st;
+    int len = std::strlen(str) + std::strlen(st.str); // set size
+    char *str_sum = new char[len + 1];
+    std::strcpy(str_sum, st.str);
+    std::strcat(str_sum, str);
+    String str_new = str_sum;
+    delete[] str_sum;
+    return str_new;
+}
+
+String String::operator+(const char *st) const
+{
+    String temp = st;
+    String sum = *this + temp;
+    return sum;
+}
+
+String operator+(const char *s, const String st)
+{
+    return st + s;
 }
 
 // overloaded operator friends
@@ -125,4 +138,33 @@ istream &operator>>(istream &is, String &st)
     while (is && is.get() != '\n')
         continue;
     return is;
+}
+
+void String::stringup()
+{
+    for (int i = 0; i < len; ++i)
+    {
+        if (std::islower(str[i]))
+            str[i] = std::toupper(str[i]);
+    }
+}
+
+void String::stringlow()
+{
+    for (int i = 0; i < len; ++i)
+    {
+        if (std::isupper(str[i]))
+            str[i] = std::tolower(str[i]);
+    }
+}
+
+int String::has(const char s)
+{
+    int sum, i;
+    for (sum = 0, i = 0; i < len; ++i)
+    {
+        if (str[i] == s)
+            sum++;
+    }
+    return sum;
 }

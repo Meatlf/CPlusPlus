@@ -28,6 +28,9 @@ public:
     String &operator=(const char *);
     char &operator[](int i);
     const char &operator[](int i) const;
+    // added by Meatlf
+    String operator+(const String &s) const;
+    String operator+(const char *s) const;
 
     // overloaded operator friends
     friend bool operator<(const String &st, const String &st2);
@@ -35,10 +38,14 @@ public:
     friend bool operator==(const String &st, const String &st2);
     friend ostream &operator<<(ostream &os, const String &st);
     friend istream &operator>>(istream &is, String &st);
-    friend String &operator+(char* c1, String &st2);
+    friend String operator+(const char *s, const String st);
 
     // static function
     // 补充静态类数据成员
     static int HowMany();
+
+    void stringup();
+    void stringlow();
+    int has(const char s);
 };
 #endif
