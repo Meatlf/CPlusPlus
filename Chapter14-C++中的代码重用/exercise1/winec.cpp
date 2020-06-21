@@ -1,36 +1,36 @@
 // studentc.cpp -- Student class using containment
+#include <iostream>
 #include "winec.h"
-using std::cin;
-using std::cout;
-using std::endl;
-using std::istream;
-using std::ostream;
-using std::string;
 
 //public methods
 void Wine::GetBottles()
 {
-    cout << "Enter year: ";
-    cin >> information[0][0];
-    cout << year;
-}
-
-int Wine::Label()
-{
-    return 0;
+    int y, b;
+    std::cout << "Enter " << label << " data for " << years << " year(s)" << std::endl;
+    for (int i = 0; i < years; ++i)
+    {
+        std::cout << "Enter year: ";
+        std::cin >> y;
+        data.first()[i] = y;
+        std::cout << "Enter bottles for that year: ";
+        std::cin >> b;
+        data.second()[i] = b;
+    }
 }
 
 int Wine::sum()
 {
-    return 0;
+    return data.second().sum();
 }
 
-// private method
-
-// friends
-
-// use string version of operator>>()
-
-// use string friend getline(ostream &, const string &)
-
-// use string version of operator<<()
+void Wine::Show() const
+{
+    std::cout << "Wine: " << label << std::endl;
+    std::cout << "Year "
+              << "  Bottles" << std::endl;
+    for (int i = 0; i < years; ++i)
+    {
+        std::cout << data.first()[i] << " ";
+        std::cout << data.second()[i] << std::endl;
+    }
+}
