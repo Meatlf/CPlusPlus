@@ -432,7 +432,11 @@ public:
 }
 ```
 
-使用多个基类的继承被称为多重继承（MI）。通常，MI尤其是公有MI将导致一些问题，必须使用额外的语法规则来解决它们，它将在本章后面介绍。但在这个示例中，MI不会导致问题。
+Q：多重继承（MI）的定义？
+
+A：使用多个基类的继承被称为多重继承。
+
+通常，MI尤其是公有MI将导致一些问题，必须使用额外的语法规则来解决它们，它将在本章后面介绍。但在这个示例中，MI不会导致问题。
 
 新的Student类不需要私有数据，因为两个基类已经提供了所需的所有数据成员。包含版本提供了两个被显式命名的对象成员，而私有继承提供了两个无名称的子对象成员。这是这两种方法的第一个主要区别。
 
@@ -458,14 +462,14 @@ Student(const char * str, const double * pd, int n)
 
 程序14.4 studenti.h
 
-```
+```c++
 #ifndef STUDENTI_H_
 #define STIDENTI_H_
 #include <iostream>
 #include <string>
 #include <valarray>
 
-class Student : private std::string, private std::valarray<double>
+class Student : private std::string, private std::valarray<double>					// 新知识
 {
 private:
     typedef std::valarray<double> ArrayDb;
@@ -476,8 +480,8 @@ public:
     explicit Student(const std::string & s) : std::string(s), ArrayDb() {}
     Student(const std::string & s, const ArrayDb & a)
         : std::string(s), ArrayDb(a) {}
-    Student(const char * str, const double * pd, int n)
-        : std::string(str), ArrayDb(pd, n) {}
+    Student(const char * str, const double * pd, int n)				
+        : std::string(str), ArrayDb(pd, n) {}																		// 新知识
     ~Student() {}
     double Average() const;
     double & operator[](int i);
@@ -505,8 +509,6 @@ double Student::Average() const
         return 0;
 }
 ```
-
-[![img](https://i.imgur.com/OgpdM6t.png)](https://i.imgur.com/OgpdM6t.png)
 
 然而，私有继承使得能够使用类名和作用域解析运算符来调用基类的方法：
 
