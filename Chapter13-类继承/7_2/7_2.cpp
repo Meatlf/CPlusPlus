@@ -1,5 +1,5 @@
-// Example01
-// 说明：公有继承
+// 7_2.cpp
+// 说明：私有继承
 // 为了简洁起见，Point类和Rectangle类都没有提够构造函数
 #include <iostream>
 #include "Rectangle.h"

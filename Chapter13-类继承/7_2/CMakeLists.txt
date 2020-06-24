@@ -1,0 +1,1 @@
+aux_source_directory(. DIR_LIB_7_2_SRCS)

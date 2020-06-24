@@ -74,10 +74,10 @@
         },
 
         {
-            "name": "(gdb) Example01_test",
+            "name": "(gdb) 7_1",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Example01_test",
+            "program": "${workspaceFolder}/build/7_1",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
@@ -91,10 +91,10 @@
         },
 
         {
-            "name": "(gdb) Example02_test",
+            "name": "(gdb) 7_2",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Example02_test",
+            "program": "${workspaceFolder}/build/7_2",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
