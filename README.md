@@ -38,3 +38,8 @@ A:[初学c++ VS code + CMake 编译调试helloWord](https://blog.csdn.net/u01426
 [2] [C++ Primer Plus学习笔记](https://www.zxpblog.cn/categories/C-Primer-Plus%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/page/2/)
 
 [3] [Cpp-Primer-Plus PyLab github 课后习题答案](https://github.com/PytLab/Cpp-Primer-Plus)
+
+[4] [C++语言程序设计基础](https://next.xuetangx.com/course/THU08091000247/1515741?fromArray=learn_title)
+
+[5] [C++语言程序设计进阶](https://next.xuetangx.com/course/THU08091000248/1510503?fromArray=search_result)
+
