@@ -6,16 +6,20 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 
 # 添加头文件路径
 include_directories("${PROJECT_SOURCE_DIR}/example1")
+include_directories("${PROJECT_SOURCE_DIR}/example1_2")
 include_directories("${PROJECT_SOURCE_DIR}/exercise1")
 
 add_executable(example1_test ./use_stuc.cpp)
+add_executable(example1_2_test ./example1_2_test.cpp)
 add_executable(example2_test ./pairs.cpp)
 add_executable(exercise1_test ./exercise1_test.cpp)
 
 # 添加子目录
 add_subdirectory(example1)
+add_subdirectory(example1_2)
 add_subdirectory(exercise1)
 
 # 添加project0库
 target_link_libraries(example1_test example1)
+target_link_libraries(example1_2_test example1_2)
 target_link_libraries(exercise1_test exercise1)
