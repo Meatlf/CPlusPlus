@@ -24,6 +24,7 @@ add_executable(exercise2_test ./exercise2_test.cpp)
 add_executable(7_1 ./7_1/7_1.cpp)
 add_executable(7_2 ./7_2/7_2.cpp)
 add_executable(Example05_test ./Example05_test.cpp)
+add_executable(ABC_test ./ABC_test.cpp)
 
 # 添加子目录
 add_subdirectory(project0)
