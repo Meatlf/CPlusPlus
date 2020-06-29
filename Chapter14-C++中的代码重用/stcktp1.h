@@ -6,39 +6,44 @@ template <class Type>
 class Stack
 {
 private:
-    enum {SIZE = 10};    // default size
+    enum
+    {
+        SIZE = 10
+    }; // default size
     int stacksize;
-    Type * items;       // holds stack items
-    int top;            // index for top stack item
+    // 动态数组
+    Type *items; // holds stack items
+    int top;     // index for top stack item
 public:
     explicit Stack(int ss = SIZE);
-    Stack(const Stack & st);
-    ~Stack() { delete [] items; }
+    Stack(const Stack &st);
+    ~Stack() { delete[] items; }
     bool isempty() { return top == 0; }
     bool isfull() { return top == stacksize; }
-    bool push(const Type & item);   // add item to stack
-    bool pop(Type & item);          // pop top into item
-    Stack & operator=(const Stack & st);
+    bool push(const Type &item); // add item to stack
+    bool pop(Type &item);        // pop top into item
+    // 注意这里的Stack其实是Stack<Type>的所写
+    Stack &operator=(const Stack &st);
 };
 
 template <class Type>
 Stack<Type>::Stack(int ss) : stacksize(ss), top(0)
 {
-    items = new Type [stacksize];
+    items = new Type[stacksize];
 }
 
 template <class Type>
-Stack<Type>::Stack(const Stack & st)
+Stack<Type>::Stack(const Stack &st)
 {
     stacksize = st.stacksize;
     top = st.top;
-    items = new Type [stacksize];
+    items = new Type[stacksize];
     for (int i = 0; i < top; i++)
         items[i] = st.items[i];
 }
 
 template <class Type>
-bool Stack<Type>::push(const Type & item)
+bool Stack<Type>::push(const Type &item)
 {
     if (top < stacksize)
     {
@@ -50,7 +55,7 @@ bool Stack<Type>::push(const Type & item)
 }
 
 template <class Type>
-bool Stack<Type>::pop(Type & item)
+bool Stack<Type>::pop(Type &item)
 {
     if (top > 0)
     {
@@ -62,17 +67,17 @@ bool Stack<Type>::pop(Type & item)
 }
 
 template <class Type>
-Stack<Type> & Stack<Type>::operator=(const Stack<Type> & st)
+Stack<Type> &Stack<Type>::operator=(const Stack<Type> &st)
 {
     if (this == &st)
         return *this;
-    delete [] items;
+    delete[] items;
     stacksize = st.stacksize;
     top = st.top;
-    items = new Type [stacksize];
+    items = new Type[stacksize];
     for (int i = 0; i < top; i++)
         items[i] = st.items[i];
-    return *this; 
+    return *this;
 }
 
 #endif
