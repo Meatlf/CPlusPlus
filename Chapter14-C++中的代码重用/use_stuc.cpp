@@ -13,6 +13,10 @@ const int quizzes = 5;
 
 int main()
 {
+    // 在构造函数有explicit时会报错
+    // Student doh("Homer", 10);
+    // doh = 5;
+
     Student ada[pupils] =
         {Student(quizzes), Student(quizzes), Student(quizzes)};
 
