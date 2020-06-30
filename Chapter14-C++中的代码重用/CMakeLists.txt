@@ -13,6 +13,7 @@ add_executable(example1_test ./use_stuc.cpp)
 add_executable(example1_2_test ./example1_2_test.cpp)
 add_executable(example2_test ./pairs.cpp)
 add_executable(exercise1_test ./exercise1_test.cpp)
+add_executable(example4_2_test ./example4_2_test.cpp)
 
 # 添加子目录
 add_subdirectory(example1)

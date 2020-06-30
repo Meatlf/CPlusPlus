@@ -56,6 +56,23 @@
     },
 
     {
+      "name": "(gdb) example4_2_test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/example4_2_test",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+
+    {
       "name": "(gdb) exercise1_test",
       "type": "cppdbg",
       "request": "launch",
