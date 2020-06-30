@@ -24,5 +24,5 @@ int main()
     cout << "Result of hasDMA assignment:\n";
     cout << map2 << endl;
     // std::cin.get();
-    return 0; 
+    return 0;
 }
