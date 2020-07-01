@@ -14,6 +14,9 @@ add_executable(example1_2_test ./example1_2_test.cpp)
 add_executable(example2_test ./pairs.cpp)
 add_executable(exercise1_test ./exercise1_test.cpp)
 add_executable(example4_2_test ./example4_2_test.cpp)
+add_executable(tempmemb ./tempmemb.cpp)
+add_executable(tempparm ./tempparm.cpp)
+add_executable(frnd2tmp ./frnd2tmp.cpp)
 
 # 添加子目录
 add_subdirectory(example1)

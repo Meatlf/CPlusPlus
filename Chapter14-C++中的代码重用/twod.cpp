@@ -5,6 +5,8 @@ int main(void)
 {
     using std::cout;
     using std::endl;
+    // Q：如何理解以下语句？
+    // A：隐式实例化（implicit instantiation），声明了对象sums，指出了所需的类型int
     ArrayTP<int, 10> sums;
     ArrayTP<double, 10> aves;
     ArrayTP< ArrayTP<int,5>, 10> twodee;

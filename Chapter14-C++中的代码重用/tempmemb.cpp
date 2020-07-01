@@ -1,4 +1,7 @@
 // tempmemb.cpp -- template members
+// 说明：
+// 1）本例中T类型由对象的实例化类型确定，具体语句为：beta<double> guy(3.5, 3);
+// 2）本例中blab()方法的U类型在被调用时的参数显式确定，具体语句为：guy.blab(10, 2.3)
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -7,23 +10,31 @@ template <typename T>
 class beta
 {
 private:
-    template <typename V>  // nested template class member
+    template <typename V> // nested template class member
     class hold
     {
     private:
         V val;
+
     public:
-        hold(V v  = 0) : val(v) {}
+        hold(V v = 0) : val(v) {}
         void show() const { cout << val << endl; }
         V Value() const { return val; }
     };
-    hold<T> q;             // template object
-    hold<int> n;           // template object
+    hold<T> q;   // template object
+    hold<int> n; // template object
 public:
-    beta( T t, int i) : q(t), n(i) {}
-    template<typename U>   // template method
-    U blab(U u, T t) { return (n.Value() + q.Value()) * u / t; }
-    void Show() const { q.show(); n.show();}
+    beta(T t, int i) : q(t), n(i) {}
+    template <typename U> // template method
+    U blab(U u, T t)
+    {
+        return (n.Value() + q.Value()) * u / t;
+    }
+    void Show() const
+    {
+        q.show();
+        n.show();
+    }
 };
 
 int main()
@@ -38,5 +49,5 @@ int main()
     cout << "U was set to double\n";
     cout << "Done\n";
     // std::cin.get();
-    return 0; 
+    return 0;
 }
