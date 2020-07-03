@@ -8,6 +8,7 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 # include_directories("${PROJECT_SOURCE_DIR}/example1")
 
 add_executable(pair_test ./pair_test.cpp)
+add_executable(vector_2_test ./vector_2_test.cpp)
 # add_executable(example2_test ./pairs.cpp)
 # add_executable(exercise1_test ./exercise1_test.cpp)
 

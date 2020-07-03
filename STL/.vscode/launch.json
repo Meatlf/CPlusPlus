@@ -20,5 +20,21 @@
         }
       ]
     },
+    {
+      "name": "(gdb) vector_2_test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/vector_2_test",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
   ]
 }
