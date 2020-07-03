@@ -667,9 +667,11 @@ struct inflatable hat;
 
 structur.cpp
 
-```
+```c++
 #include <iostream>
 using namespace std;
+
+// 结构的声明
 struct inflatable
 {
         char name[20];
@@ -679,6 +681,7 @@ struct inflatable
 
 int main()
 {
+    	// 结构变量的初始化
         inflatable guest = {"gloria", 1.88, 29.99};
         inflatable pal = {"Arthur", 3.12, 32.99};
 
