@@ -23,9 +23,20 @@ int main()
 
     Tv s58(Tv::On);
     s58.set_mode();
-    grey.set_chan(s58,28);
+    grey.set_chan(s58, 28);
     cout << "\n58\" settings:\n";
     s58.settings();
+
+    // by Meatlf
+    Tv s66;
+    s66.settings();
+    s66.onoff();
+    s66.chandown();
+    cout << "\n66\" settings:\n";
+    s66.settings();
+    grey.chanup(s66);
+    grey.set_chan(s66, 50);
+    s66.settings();
     // std::cin.get();
-    return 0; 
+    return 0;
 }
