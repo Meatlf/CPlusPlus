@@ -61,6 +61,7 @@ public:
     void onoff(Tv &t) { t.onoff(); }
     void chanup(Tv &t) { t.chanup(); }
     void chandown(Tv &t) { t.chandown(); }
+    // 唯一直接访问Tv成员的Remote方法是Remote::set_chan()，因此它是唯一需要作为友元的方法
     void set_chan(Tv &t, int c) { t.channel = c; }
     void set_mode(Tv &t) { t.set_mode(); }
     void set_input(Tv &t) { t.set_input(); }

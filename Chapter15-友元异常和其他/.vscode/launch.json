@@ -22,10 +22,10 @@
     },
 
     {
-      "name": "(gdb) example1_2_test",
+      "name": "(gdb) error1",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/example1_2_test",
+      "program": "${workspaceFolder}/build/error1",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -39,10 +39,10 @@
     },
 
     {
-      "name": "(gdb) example1_test",
+      "name": "(gdb) error3",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/example1_test",
+      "program": "${workspaceFolder}/build/error3",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -56,10 +56,10 @@
     },
 
     {
-      "name": "(gdb) example4_2_test",
+      "name": "(gdb) error4",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/example4_2_test",
+      "program": "${workspaceFolder}/build/error4",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -73,10 +73,10 @@
     },
 
     {
-      "name": "(gdb) exercise1_test",
+      "name": "(gdb) error5",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/exercise1_test",
+      "program": "${workspaceFolder}/build/error5",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -88,6 +88,7 @@
         }
       ]
     },
+
 
     {
       "name": "(gdb) tempmemb",

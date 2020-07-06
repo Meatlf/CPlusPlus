@@ -11,6 +11,10 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 include_directories("${PROJECT_SOURCE_DIR}/example1")
 
 add_executable(example1_test ./use_tv.cpp)
+add_executable(error1 ./error1.cpp)
+add_executable(error3 ./error3.cpp)
+add_executable(error4 ./error4.cpp)
+add_executable(error5 ./error5.cpp)
 
 # 添加子目录
 add_subdirectory(example1)
