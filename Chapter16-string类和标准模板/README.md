@@ -4,7 +4,7 @@
 
 ## 16.1 string类
 
-很多应用程序都需要处理字符串。C语言在string.h（在C++中为cstring）中提供了一系列的字符串函数，很多早期的C++实现为处理字符串提供了自己的类。[第4章](https://www.zxpblog.cn/2018/09/12/C++ Primer Plus--复合类型（四）/)介绍了ANSI/ISO C++ string类，而[第12章](https://www.zxpblog.cn/2019/02/13/C++ Primer Plus--类和动态内存分配（十二）/)创建了一个不大的String类，说明设计表示字符串的类的某些方面。
+很多应用程序都需要处理字符串。C语言在string.h（在C++中为cstring）中提供了一系列的字符串函数，很多早期的C++实现为处理字符串提供了自己的类。第4章介绍了ANSI/ISO C++ string类，而第12章创建了一个不大的String类，说明设计表示字符串的类的某些方面。
 
 string类由头文件string支持的（注意，头文件string.h和cstring支持对C-风格字符串进行操纵的C库字符串函数，但不支持string）。要使用类，关键字在于知道它的公有接口，而string类包含大量的方法，其他包含了若干构造函数，用于将字符串赋给变量、合并字符串、比较字符串和访问各个元素的重载运算符以及用于在字符串中查找字符和子字符串的工具等。
 
@@ -672,11 +672,17 @@ void remodel(std::string & str)
 
 ### 16.2.1 使用智能指针
 
-这三个智能指针模板（auto_ ptr、unique_ ptr和shared_ ptr）都定义了类似指针的对象，可以将new获得（直接或间接）的地址赋给这种对象。**当智能指针过期时，其析构函数将使用delete来释放内存。**因此，如果将new返回的地址赋给这些对象，将无需记住稍后释放这些内存：在智能指针过期时，这些内存将自动被释放。图16.2说明了auto_ ptr和常规指针在行为方面的差别：shared_ ptr和unique_ ptr的行为与auto_ ptr相同。
+这三个智能指针模板（auto_ ptr、unique_ ptr和shared_ ptr）都定义了类似指针的对象，可以将new获得（直接或间接）的地址赋给这种对象。**当智能指针过期时，其析构函数将使用delete来释放内存。**因此，如果将new返回的地址赋给这些对象，将无需记住稍后释放这些内存：在智能指针过期时，这些内存将自动被释放。
 
-[![img](https://i.imgur.com/kct3KbJ.png)](https://i.imgur.com/kct3KbJ.png)
+Q：auto_ptr和常规指针之间的差别是什么？
 
-要创建智能指针，必须包含头文件memory，该文件模板定义。然后是同通常的模板语法来实现所需类型的指针。例如，模板auto_ptr包含如下构造函数:
+A：auto_ptr会自动释放内存，而常规指针不会。图16.2说明了auto_ ptr和常规指针在行为方面的差别。
+
+说明：shared_ ptr和unique_ ptr的行为与auto_ ptr相同。
+
+Q：如何创建智能指针？
+
+A：要创建智能指针，必须包含头文件memory，该文件模板定义。然后是同通常的模板语法来实现所需类型的指针。例如，模板auto_ptr包含如下构造函数:
 
 ```
 template <class X> class auto_ptr{
@@ -701,7 +707,9 @@ unique_ptr<double> pdu(new double);
 shared_ptr<string> pss(new string);
 ```
 
-因此，要转换remodel()函数，应按下面3个步骤进行：
+Q：如何将一般的指针使用动态内存的代码转换为智能指针使用动态内存的代码？
+
+A：以书本中remodel()函数为例，要转换remodel()函数，应按下面3个步骤进行：
 
 1. 包含头文件memory;
 2. 将指向string的指针替换为指向string的智能指针对象；
@@ -759,12 +767,6 @@ int main()
     }
     return 0;
 }
-```
-
-编译：
-
-```
-g++ -std=c++11 smrtptrs.cpp
 ```
 
 输出：
