@@ -4,7 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "name": "(gdb) secref",
             "type": "cppdbg",
@@ -38,10 +37,10 @@
             ]
         },
         {
-            "name": "(gdb) arrfun1",
+            "name": "(gdb) strc_ref",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/arrfun1",
+            "program": "${workspaceFolder}/build/strc_ref",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
@@ -54,10 +53,10 @@
             ]
         },
         {
-            "name": "(gdb) arrfun2",
+            "name": "(gdb) tempover",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/arrfun2",
+            "program": "${workspaceFolder}/build/tempover",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
@@ -69,5 +68,5 @@
                 }
             ]
         }
-   ]
+    ]
 }

@@ -8,6 +8,9 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 # include_directories("${PROJECT_SOURCE_DIR}/exercise1")
 
 add_executable(secref ./secref.cpp)
+add_executable(strtref ./strtref.cpp)
+add_executable(strc_ref ./strc_ref.cpp)
+add_executable(tempover ./tempover.cpp)
 
 # 添加子目录
 # add_subdirectory(exercise1)

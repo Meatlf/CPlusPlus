@@ -7,7 +7,6 @@ struct sysop
     char quote[64];
     int used;
 };
-
 const sysop & use(sysop & sysopref);  // function with a reference return type
 
 int main()
