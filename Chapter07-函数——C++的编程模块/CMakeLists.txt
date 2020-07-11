@@ -12,6 +12,7 @@ add_executable(arrfun2 ./arrfun2.cpp)
 add_executable(fun_ptr ./fun_ptr.cpp)
 add_executable(arfupt ./arfupt.cpp)
 add_executable(exercise01 ./exercise01.cpp)
+add_executable(exercise02 ./exercise02.cpp)
 
 # 添加子目录
 # add_subdirectory(exercise1)
