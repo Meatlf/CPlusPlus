@@ -4,7 +4,7 @@ void countdown(int n);
 
 int main()
 {
-    countdown(4);           // call the recursive function
+    countdown(4); // call the recursive function
     // std::cin.get();
     return 0;
 }
@@ -12,8 +12,9 @@ int main()
 void countdown(int n)
 {
     using namespace std;
-    cout << "Counting down ... " << n << endl;
+    cout << "Counting down ... " << n << " (n at " << &n << ")" << endl;
     if (n > 0)
-        countdown(n-1);     // function calls itself
-    cout << n << ": Kaboom!\n";
+        countdown(n - 1); // function calls itself
+    cout << n << ": Kaboom!"
+         << " (n at " << &n << ")" << endl;
 }
