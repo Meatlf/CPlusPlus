@@ -52,7 +52,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) instr2",
       "type": "cppdbg",
@@ -69,7 +68,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) strtype1",
       "type": "cppdbg",
@@ -86,7 +84,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) exercise02",
       "type": "cppdbg",
@@ -103,7 +100,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) exercise04",
       "type": "cppdbg",
@@ -120,7 +116,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) exercise05",
       "type": "cppdbg",
@@ -154,6 +149,22 @@
       ]
     },
     {
+      "name": "(gdb) exercise08",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exercise08",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
       "name": "(gdb) exercise09",
       "type": "cppdbg",
       "request": "launch",
@@ -169,7 +180,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) strtype4",
       "type": "cppdbg",
@@ -186,7 +196,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) mixtypes",
       "type": "cppdbg",
