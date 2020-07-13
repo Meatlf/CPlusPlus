@@ -11,7 +11,9 @@ int main()
     double av[3] = {1112.3, 1542.6, 2227.9};
 
     // pointer to a function
+    // p1是指向该函数f1的指针
     const double *(*p1)(const double *, int) = f1;
+    // p2是指向该函数f1的指针
     auto p2 = f2; // C++0x automatic type deduction
                   // pre-C++0x can use the following code instead
                   // const double *(*p2)(const double *, int) = f2;
@@ -22,6 +24,7 @@ int main()
 
     // pa an array of pointers
     // auto doesn't work with list initialization
+    // pa是一个数组，其中的每个元素都是指向函数的指针
     const double *(*pa[3])(const double *, int) = {f1, f2, f3};
     // but it does work for initializing to a single value
     // pb a pointer to first element of pa
