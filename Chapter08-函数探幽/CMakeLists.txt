@@ -12,6 +12,7 @@ add_executable(strtref ./strtref.cpp)
 add_executable(strc_ref ./strc_ref.cpp)
 add_executable(tempover ./tempover.cpp)
 add_executable(exercise1 ./exercise1.cpp)
+add_executable(exercise2 ./exercise2.cpp)
 
 # 添加子目录
 # add_subdirectory(exercise1)
