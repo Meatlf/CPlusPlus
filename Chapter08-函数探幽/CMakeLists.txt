@@ -11,6 +11,7 @@ add_executable(secref ./secref.cpp)
 add_executable(strtref ./strtref.cpp)
 add_executable(strc_ref ./strc_ref.cpp)
 add_executable(tempover ./tempover.cpp)
+add_executable(exercise1 ./exercise1.cpp)
 
 # 添加子目录
 # add_subdirectory(exercise1)
