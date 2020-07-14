@@ -4,7 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "name": "(gdb) floatnum",
             "type": "cppdbg",
@@ -21,5 +20,21 @@
                 }
             ]
         },
-   ]
+        {
+            "name": "(gdb) fltadd",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/fltadd",
+            //"processId": "${command:pickProcess}",
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+    ]
 }
