@@ -4,9 +4,13 @@
 
 ## 4.1 数组
 
-数组是一种数据格式，能过存储多个同类型的值。例如，数组可以存储60个int类型的值。
+Q：数组的定义？
 
-创建数组，可使用声明语句，声明输入应指出以下三点：
+A：数组是一种数据格式，能过存储多个同类型的值。例如，数组可以存储60个int类型的值。
+
+Q：如何创建数组？
+
+A：创建数组，可使用声明语句，声明输入应指出以下三点：
 
 - 存储在每个元素种的值的类型
 - 数组名
@@ -38,26 +42,69 @@ loans的类型不是“数组”，而是“float数组”。这强调loans数�
 
 有效下标的重要性：编译器不会检查使用的下标是否有效。但是程序运行后，这种赋值可能引发问题，他可能破坏数据或代码，也可能导致程序异常终止。
 
-数组初始化：
+程序清单4.1
+
+```c++
+// arrayone.cpp -- small arrays of integers
+#include <iostream>
+int main()
+{
+    using namespace std;
+    int yams[3];    // creates array with three elements
+    yams[0] = 7;    // assign value to first element
+    yams[1] = 8;
+    yams[2] = 6;
+
+    int yamcosts[3] = {20, 30, 5}; // create, initialize array
+// NOTE: If your C++ compiler or translator can't initialize
+// this array, use static int yamcosts[3] instead of
+// int yamcosts[3]
+
+    cout << "Total yams = ";
+    cout << yams[0] + yams[1] + yams[2] << endl;
+    cout << "The package with " << yams[1] << " yams costs ";
+    cout << yamcosts[1] << " cents per yam.\n";
+    int total = yams[0] * yamcosts[0] + yams[1] * yamcosts[1];
+    total = total + yams[2] * yamcosts[2];
+    cout << "The total yam expense is " << total << " cents.\n";
+
+    cout << "\nSize of yams array = " << sizeof yams;
+    cout << " bytes.\n";
+    cout << "Size of one element = " << sizeof yams[0];
+    cout << " bytes.\n";
+    // cin.get();
+    return 0; 
+}
+
+```
+
+### 4.1.1 程序说明
+
+Q：如何进行数组初始化？
+
+A：使用初始化列表，见如下示例：
 
 ```
 int y[3] = {0,1,2};
 ```
 
-sizeof运算符返回类型或数据对象的长度（单位为字节）。
+Q：如何理解sizeof运算符作用于数组名和数组第一个元素？
+
+A：sizeof运算符返回类型或数据对象的长度（单位为字节），如程序清单4.1中：
 
 ```
-sizeof(y);
+sizeof yams;		// 12个字节
+sizeof yams[0];		// 4个字节
 ```
 
-### 4.1.1 数组初始化
+### 4.1.2 数组的初始化规则
 
 只有定义数组时才能初始化，此后就不能使用了，也不能将一个数组赋给另一个数组：
 
 ```
 int cards[5] = {3,6,8,10}; 
 int hand[4];
-hand[4] = {5,6,7,9}; //错误做法，hand[4] = 5;这样是替换低4个元素的值为5
+hand[4] = {5,6,7,9}; //错误做法，hand[4] = 5;这样是替换第4个元素的值为5
 hand = cards; //错误语法
 ```
 
@@ -83,7 +130,7 @@ short things[] = {1,5,3,8};
 
 编译器将使things数组包含4个元素。
 
-### 4.1.2 C++11数组初始化方法
+### 4.1.3 C++11数组初始化方法
 
 初始化时可以省略等号：
 
@@ -94,6 +141,7 @@ double earning[3] {100.1, 112.2,133.2};
 可以在花括号中不包括任何内容，这将把所有元素都设置为零：
 
 ```
+unsigned int counts{10} = {};
 float blances[100] {}; 
 ```
 
@@ -235,24 +283,15 @@ int main()
 结果：
 
 ```
-[root@localhost ~]# ./a.out</br>
-Enter your name: </br>
-zxp</br>
-Enter your favorite dessert:</br> 
-kk</br> 
-zxp like kk</br> 
-[root@localhost ~]# ./a.out</br> 
-Enter your name: </br> 
-zxp zxp1</br> 
-Enter your favorite dessert: </br> 
-zxp like zxp1</br> 
+Enter your name:
+Alistair Dreeb
+Enter your favorite dessert: 
+I have some delicious Dreeb for you, Alistair
 ```
 
-对于第二种情况，我们还没有对“输入甜点的提示”做出反应，程序便他把显示出来。
+Q：该程序存在哪些问题？
 
-由于不能通过键盘输入空字符，因此cin需要用别的方法来字符串的结尾位置。cin使用空白（空格、制表符和换行符）来确定字符串的结束位置，这意味着cin在获取字符数组输入时只读取一个单词。读取该单词后，cin将该字符串放到数组中，并自动在结尾添加空字符。
-
-这个例子的实际结果是，cin把zxp作为第一个字符串，并将它放到name数组中。把zxp1留在队列中，当cin在输入队列中搜索用户喜欢的甜点时，它发现了zxp1,因此cin读取zxp1,并将它放到dessert数组中。
+A：我们还没有对“Enter your favorite dessert”做出反应，程序便他把显示出来。由于不能通过键盘输入空字符，因此cin需要用别的方法来字符串的结尾位置。cin使用空白（空格、制表符和换行符）来确定字符串的结束位置，这意味着cin在获取字符数组输入时只读取一个单词。读取该单词后，cin将该字符串放到数组中，并自动在结尾添加空字符。这个例子的实际结果是，cin把Alistair作为第一个字符串，并将它放到name数组中。把Dreeb留在队列中，当cin在输入队列中搜索用户喜欢的甜点时，它发现了Dreeb,因此cin读取Dreeb,并将它放到dessert数组中。
 
 ### 4.2.4 每次读取一行字符串输入
 
@@ -260,7 +299,11 @@ zxp like zxp1</br>
 
 istream中的类（如cin）提供了面向行的类成员：getline()和get()。这两个函数都读取一行输入，直到到达换行符。然而，随后getline()将丢弃换行符，而get()将换行符保留在输入序列中。
 
-**1、getline()**
+**1、面向行的输入：getline()**
+
+Q：为什么要引入getline()？
+
+A：因为cin单独使用只能读取一个单词，但是我们往往会遇到读取一行数据的需求，因而引入了getline()。
 
 使用cin.getline()调用。该函数有两个参数：
 
