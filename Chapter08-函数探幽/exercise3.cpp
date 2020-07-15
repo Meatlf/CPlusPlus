@@ -12,26 +12,33 @@ struct CandyBar
     int calories;
 };
 
-string *toupper_test(const string *&str);
+void toupper_test(string &str);
 
-string *toupper_test(const string *&str)
+void toupper_test(string &str)
 {
     int i = 0;
-    string *result_str;
-    while ((*str)[i])
+    while (str[i])
     {
-        (*result_str)[i] = toupper((*str)[i]);
+        str[i] = toupper(str[i]);
         i++;
     }
-    return result_str;
 }
 
 int main()
 {
-    string str = "Meatlf";
-    const string *pstr = &str;
-    string* out_string = toupper_test(pstr);
-    cout << *out_string << endl;
+    string str;
+    char c[100];
+    cout << "Enter a string (q to quit): ";
+    cin.getline(c, 100);
+    str = c;
+    while (str != "q")
+    {
+        toupper_test(str);
+        cout << str << endl;
+        cout << "Next string (q to quit): " << endl;
+        cin.getline(c, 100);
+        str = c;
+    }
     // cin.get();
     return 0;
 }
