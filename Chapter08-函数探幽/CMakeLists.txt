@@ -16,6 +16,7 @@ add_executable(exercise2 ./exercise2.cpp)
 add_executable(exercise3 ./exercise3.cpp)
 add_executable(exercise4 ./exercise4.cpp)
 add_executable(exercise5 ./exercise5.cpp)
+add_executable(exercise6 ./exercise6.cpp)
 
 # 添加子目录
 # add_subdirectory(exercise1)
