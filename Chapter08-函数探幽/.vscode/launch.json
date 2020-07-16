@@ -163,6 +163,22 @@
           "ignoreFailures": true
         }
       ]
+    },
+    {
+      "name": "(gdb) exercise7",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exercise7",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
