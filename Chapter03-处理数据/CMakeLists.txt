@@ -9,3 +9,5 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 
 add_executable(floatnum floatnum.cpp)
 add_executable(fltadd fltadd.cpp)
+add_executable(exercise4 exercise4.cpp)
+add_executable(exercise5 exercise5.cpp)
