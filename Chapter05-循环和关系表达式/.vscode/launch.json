@@ -21,10 +21,10 @@
       ]
     },
     {
-      "name": "(gdb) strings",
+      "name": "(gdb) formore",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/strings",
+      "program": "${workspaceFolder}/build/formore",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
