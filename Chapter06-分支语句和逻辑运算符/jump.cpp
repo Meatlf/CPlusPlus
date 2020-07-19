@@ -5,11 +5,12 @@ int main()
 {
     using namespace std;
     char line[ArSize];
-    int spaces = 0; 
+    int spaces = 0;
 
     cout << "Enter a line of text:\n";
     cin.get(line, ArSize);
-    cout << "Complete line:\n" << line << endl;
+    cout << "Complete line:\n"
+         << line << endl;
     cout << "Line through first period:\n";
     for (int i = 0; line[i] != '\0'; i++)
     {
@@ -20,7 +21,8 @@ int main()
             continue;
         spaces++;
     }
-    cout << "\n" << spaces << " spaces\n";
+    cout << "\n"
+         << spaces << " spaces\n";
     cout << "Done.\n";
     // cin.get();
     // cin.get();
