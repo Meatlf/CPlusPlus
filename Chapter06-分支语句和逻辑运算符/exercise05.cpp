@@ -2,7 +2,6 @@
 // 参考资料:
 
 #include <iostream>
-const int Fave = 27;
 
 int main()
 {
