@@ -6,22 +6,23 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 
 # 添加头文件路径
 include_directories("${PROJECT_SOURCE_DIR}/")
-include_directories("${PROJECT_SOURCE_DIR}/exercise1")
-include_directories("${PROJECT_SOURCE_DIR}/exercise4")
+include_directories("${PROJECT_SOURCE_DIR}/Exercise1")
+include_directories("${PROJECT_SOURCE_DIR}/Exercise4")
 
 add_executable(external ./external.cpp support.cpp)
 add_executable(file ./file1.cpp file2.cpp)
 add_executable(twofile ./twofile1.cpp twofile2.cpp)
 add_executable(static ./static.cpp)
 add_executable(newplace ./newplace.cpp)
-add_executable(golf_test ./golf_test.cpp)
-add_executable(test_exercise2 ./exercise2.cpp)
-add_executable(exercise4_test ./exercise4_test.cpp)
+add_executable(exercise1 ./exercise1.cpp)
+add_executable(exercise2 ./exercise2.cpp)
+add_executable(exercise3 ./exercise3.cpp)
+add_executable(exercise4 ./exercise4.cpp)
 
 # 添加子目录
-add_subdirectory(exercise1)
-add_subdirectory(exercise4)
+add_subdirectory(Exercise1)
+add_subdirectory(Exercise4)
 
 # 添加库
-target_link_libraries(golf_test golf)
-target_link_libraries(exercise4_test sales)
+target_link_libraries(exercise1 golf)
+target_link_libraries(exercise4 sales)
