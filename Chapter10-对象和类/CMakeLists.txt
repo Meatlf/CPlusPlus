@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(chapter10 VERSION 0.1.0)
-
-include(CTest)
-enable_testing()
+project(Chapter10 VERSION 0.1.0)
 
 #dubug 模式
 set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
@@ -16,7 +13,7 @@ include_directories("${PROJECT_SOURCE_DIR}/exercise6")
 
 add_executable(test_exercise1 ./bank_count_test.cpp)
 add_executable(test_exercise2 ./person_test.cpp)
-add_executable(test_exercise3 ./golf_test.cpp)
+add_executable(exercise3_test ./exercise3_test.cpp)
 add_executable(exercise4_test ./exercise4_test.cpp)
 add_executable(exercise6_test ./exercise6_test.cpp)
 add_executable(4_1 ./4_1.cpp)
@@ -32,10 +29,6 @@ add_subdirectory(exercise6)
 # 添加库
 target_link_libraries(test_exercise1 exercise1)
 target_link_libraries(test_exercise2 exercise2)
-target_link_libraries(test_exercise3 exercise3)
+target_link_libraries(exercise3_test exercise3)
 target_link_libraries(exercise4_test exercise4)
 target_link_libraries(exercise6_test exercise6)
-
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)

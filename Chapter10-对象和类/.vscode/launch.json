@@ -37,10 +37,10 @@
             ]
         },
         {
-            "name": "(gdb) test_exercise3",
+            "name": "(gdb) exercise3_test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_exercise3",
+            "program": "${workspaceFolder}/build/exercise3_test",
             //"processId": "${command:pickProcess}",
             "cwd": "${workspaceRoot}",
             "MIMode": "gdb",
