@@ -1,19 +1,32 @@
-#include"golf.h"
+#include <iostream>
+#include "golf.h"
 
-void setgolf(golf & g, const char * name, int hc)
+using namespace std;
+
+void setgolf(golf &g, const string name, int hc)
 {
-    strcpy(g.fullname, name);
+    g.fullname = name;
     g.handicap = hc;
 }
 
-void setgolf(golf & g)
+void setgolf(golf &g)
 {
-    char* name = new char [25];
+    string name;
     int hc;
     cout << "Please input name: ";
     cin >> name;
     cout << "Please input handicap:";
     cin >> hc;
-    strcpy(g.fullname, name);
+    g.fullname = name;
     g.handicap = hc;
+}
+
+void handicap(golf &g, int hc)
+{
+    g.handicap = hc;
+}
+
+void showgolf(const golf &g)
+{
+    cout << "Fullname: " << g.fullname << "    Handicap: " << g.handicap << endl;
 }

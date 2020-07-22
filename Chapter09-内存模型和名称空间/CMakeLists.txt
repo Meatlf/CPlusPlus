@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(Chapter10 VERSION 0.1.0)
+project(Chapter09 VERSION 0.1.0)
 
 #dubug 模式
 set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
