@@ -5,6 +5,7 @@ project(Chapter10 VERSION 0.1.0)
 set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 
 # 添加头文件路径
+include_directories("${PROJECT_SOURCE_DIR}/")
 include_directories("${PROJECT_SOURCE_DIR}/exercise1")
 include_directories("${PROJECT_SOURCE_DIR}/exercise2")
 include_directories("${PROJECT_SOURCE_DIR}/exercise3")
@@ -12,6 +13,7 @@ include_directories("${PROJECT_SOURCE_DIR}/exercise4")
 include_directories("${PROJECT_SOURCE_DIR}/exercise6")
 include_directories("${PROJECT_SOURCE_DIR}/exercise7")
 
+add_executable(usestok2 ./usestok2.cpp stock20.cpp)
 add_executable(test_exercise1 ./bank_count_test.cpp)
 add_executable(test_exercise2 ./person_test.cpp)
 add_executable(exercise3_test ./exercise3_test.cpp)
