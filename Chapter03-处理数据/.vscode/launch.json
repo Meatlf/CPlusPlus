@@ -1,72 +1,104 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(gdb) divide",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/divide",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
         {
-            "name": "(gdb) floatnum",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/floatnum",
-            //"processId": "${command:pickProcess}",
-            "cwd": "${workspaceRoot}",
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+        "name": "(gdb) modulus",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/modulus",
+        //"processId": "${command:pickProcess}",
+        "cwd": "${workspaceRoot}",
+        "MIMode": "gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      },
+    {
+      "name": "(gdb) floatnum",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/floatnum",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
         {
-            "name": "(gdb) fltadd",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/fltadd",
-            //"processId": "${command:pickProcess}",
-            "cwd": "${workspaceRoot}",
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) fltadd",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/fltadd",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
         {
-            "name": "(gdb) exercise4",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/exercise4",
-            //"processId": "${command:pickProcess}",
-            "cwd": "${workspaceRoot}",
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) exercise4",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exercise4",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
         {
-            "name": "(gdb) exercise5",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/exercise5",
-            //"processId": "${command:pickProcess}",
-            "cwd": "${workspaceRoot}",
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
-    ]
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) exercise5",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exercise5",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
 }
