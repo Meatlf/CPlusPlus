@@ -59,9 +59,11 @@ complex complex::operator~()
 std::istream &operator>>(std::istream &is, complex &c)
 {
     cout << "real: ";
-    is >> c.re_;
-    cout << "imaginary: ";
-    is >> c.im_;
+    if (is >> c.re_)
+    {
+        cout << "imaginary: ";
+        is >> c.im_;
+    }
     return is;
 }
 
