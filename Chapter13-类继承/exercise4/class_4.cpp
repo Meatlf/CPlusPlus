@@ -49,3 +49,47 @@ ostream &operator<<(ostream &os, const Port &p)
     os << "品牌名为：" << p.brand << " 风格为：" << p.style << " 酒的瓶数为：" << p.bottles << endl;
     return os;
 }
+
+VintagePort::VintagePort() : Port()
+{
+    nickname = new char[100];
+    year = 10;
+}
+
+VintagePort::VintagePort(const char *br, int b, const char *nn, int y) : Port(br, "none", b)
+{
+    nickname = new char[100];
+    strcpy(nickname, nn);
+    year = y;
+}
+
+VintagePort::VintagePort(const VintagePort &vp) : Port(vp)
+{
+    nickname = new char[100];
+    strcpy(nickname, vp.nickname);
+    year = vp.year;
+}
+
+VintagePort &VintagePort::operator=(const VintagePort &vp)
+{
+    if (this == &vp)
+        return *this;
+    Port::operator=(vp);
+    delete[] nickname;
+    strcpy(nickname, vp.nickname);
+    year = vp.year;
+    return *this;
+}
+
+void VintagePort::Show() const
+{
+    Port::Show();
+    cout << nickname << year << endl;
+}
+
+ostream &operator<<(ostream &os, const VintagePort &vp)
+{
+    os << (const Port &)vp;
+    os << "Nick name: " << vp.nickname << " Year: " << vp.year << endl;
+    return os;
+}
