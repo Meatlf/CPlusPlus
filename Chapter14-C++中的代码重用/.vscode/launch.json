@@ -20,7 +20,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) example1_2_test",
       "type": "cppdbg",
@@ -37,7 +36,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) example1_test",
       "type": "cppdbg",
@@ -54,7 +52,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) example4_2_test",
       "type": "cppdbg",
@@ -71,7 +68,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) exercise1_test",
       "type": "cppdbg",
@@ -88,7 +84,54 @@
         }
       ]
     },
-
+    {
+      "name": "(gdb) exercise2_test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exercise2_test",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) worktest",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/worktest",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) workmi",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/workmi",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
     {
       "name": "(gdb) tempmemb",
       "type": "cppdbg",
@@ -105,7 +148,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) tempparm",
       "type": "cppdbg",
@@ -122,6 +164,5 @@
         }
       ]
     },
-  ]
   ]
 }

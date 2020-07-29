@@ -9,7 +9,7 @@ int main()
     Waiter w_temp;
     Singer s_temp;
 
-    Worker * pw[LIM] = {&bob, &bev, &w_temp, &s_temp};
+    Worker *pw[LIM] = {&bob, &bev, &w_temp, &s_temp};
 
     int i;
     for (i = 2; i < LIM; i++)
