@@ -53,6 +53,8 @@ protected:
     };
 
 private:
+    // Q：为什么要将下面的语句声明为static？
+    //
     static char *pv[Vtypes]; // string equivs of voice types
     int voice;
 

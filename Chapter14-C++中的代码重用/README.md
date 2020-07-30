@@ -848,6 +848,821 @@ A：
 
 解决方案：C++和Python等支持多重继承，Java不支持而使用接口实现。
 
+Q：如何判断一个类是否为抽象基类？
+
+A：观察程序清单14.7，Worker为抽象基类，其明显的特征是具有virtual声明的成员函数。
+
+下面来看一个例子，并介绍有哪些问题以及如何解决它们。要使用MI，需要几个类。我们将定义一个抽象基类Worker，并使用它派生出Waiter类和Singer类。然后，便可以使用MI从Waiter类和Singer类派生出SingingWaiter类（见书本图14.3 祖先相同的多重继承（MI））。这里使用两个独立的派生类来使基类Worker被继承，这将导致MI的大多数麻烦。首先，声明Worker、Waiter和Singer类，如程序14.7所示：
+
+程序14.7 worker0.h
+
+```
+#ifndef WORKER0_H_
+#define WORKER0_H_
+
+#include <string>
+
+class Worker
+{
+private:
+    std::string fullname;
+    long id;
+public:
+    Worker() : fullname("no one"), id(0L) {}
+    Worker(const std::string & s, long n) 
+         : fullname(s), id(n) {}
+    virtual ~Worker() = 0;
+    virtual void Set();
+    virtual void Show() const;
+};
+
+class Waiter : public Worker
+{
+private:
+    int panache;
+public:
+    Waiter() : Worker(), panache(0) {}
+    Waiter(const std::string & s, long n, int p = 0)
+         : Worker(s,n), panache(p) {}
+    Waiter(const Worker & wk, int p = 0)
+         : Worker(wk), panache(p) {}
+    void Set();
+    void Show() const;
+};
+
+class Singer : public Worker
+{
+protected:
+    enum {other, alto, contralto, soprano,
+            bass, baritone, tenor};
+    enum {Vtypes = 7};
+private:
+    static char *pv[Vtypes];
+    int voice;
+public:
+    Singer() : Worker() {}
+    Singer(const std::string & s, long n, int v = other)
+         : Worker(s, n), voice(v) {}
+    Singer(const Worker & wk, int v = other)
+         : Worker(wk), voice(v) {}
+    void Set();
+    void Show() const;
+};
+
+#endif
+```
+
+程序14.7的类声明中包含一些表示声音类型的内部常量。一个美剧符号常量alto等表示声明类型，静态数组pv存储了指向相应C-风格字符串的指针，程序14.8初始化了该数组。
+
+程序14.8 worker0.cpp
+
+```
+#include "worker0.h"
+#include <iostream>
+using namespace std;
+
+Worker::~Worker() {}
+
+void Worker::Set()
+{
+    cout << "Enter worker's name: ";    
+    getline(cin, fullname);
+    cout << "Enter worker;s ID: ";
+    cin >> id;
+    while (cin.get() != '\n')
+        continue;
+}
+
+void Worker::Show() const
+{
+    cout << "Name: " << fullname << endl;
+    cout << "Employee ID: " << id << endl;
+}
+
+void Waiter::Set()
+{
+    Worker::Set();
+    cout << "Enter waiter's panache rating: ";
+    cin >> panache;
+    while (cin.get() != '\n')
+        continue;
+}
+
+void Waiter::Show() const
+{
+    cout << "Category: waiter\n";
+    Worker::Show();
+    cout << "Panache rating: " << panache << endl;
+}
+
+char * Singer::pv[] = {"ohter", "alto", "contralto", 
+        "soprano", "brass", "baritone", "tenor"};
+
+void Singer::Set()
+{
+    Worker::Set();
+    cout << "Enter number for singer's vocal range:\n";
+    int i;
+    for (i = 0; i < Vtypes; i++)
+    {
+        cout << i << ": " << pv[i] << " ";
+        if (i % 4 == 3)
+            cout << endl;
+    }
+    if (i % 4 != 0)
+        cout << endl;
+    while (cin >> voice && (voice < 0 || voice >= Vtypes) )
+        cout << "Please enter avalue >= 0 and < " << Vtypes << endl;
+    while (cin.get() != '\n')
+        continue;
+}
+
+void Singer::Show() const
+{
+    cout << "Category: singer\n";
+    Worker::Show();
+    cout << "Vocal range: " << pv[voice] << endl;
+}
+```
+
+程序14.9是一个简短的程序，它使用了多态指针数组对这些类进行测试。
+
+程序14.9 worktest.cpp
+
+```
+#include <iostream>
+#include "worker0.h"
+const int LIM = 4;
+
+int main()
+{
+    Waiter bob("Bob Apple", 314L, 5);
+    Singer bev("Beverly Hills", 522L, 3);
+    Waiter w_temp;
+    Singer s_temp;
+
+    Worker * pv[LIM] = {&bob, &bev, &w_temp, &s_temp};
+
+    int i;
+    for (i = 2; i < LIM; i++)
+        pv[i]->Set();
+    for (i = 0; i < LIM; i++)
+    {
+        pv[i]->Show();
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出：
+
+```
+Enter worker's name: Waldo Dropmaster
+Enter worker;s ID: 442
+Enter waiter's panache rating: 3
+Enter worker's name: Sylvie Sirenne
+Enter worker;s ID: 555
+Enter number for singer's vocal range:
+0: ohter 1: alto 2: contralto 3: soprano 
+4: brass 5: baritone 6: tenor 
+3
+Category: waiter
+Name: Bob Apple
+Employee ID: 314
+Panache rating: 5
+
+Category: singer
+Name: Beverly Hills
+Employee ID: 522
+Vocal range: soprano
+
+Category: waiter
+Name: Waldo Dropmaster
+Employee ID: 442
+Panache rating: 3
+
+Category: singer
+Name: Sylvie Sirenne
+Employee ID: 555
+Vocal range: soprano
+```
+
+这种设计看起来是可行的；使用Waiter指针来调用Waiter::Show()和Waiter::Set()。然后，添加一个从Singer和Waiter类派生出来的SingingWaiter类后，将带来一些问题。具体来说，出现以下问题：
+
+- 有多少个Worker？
+- 哪个方法？
+
+### 14.3.1 有多少个Worker
+
+假设首先从Singer和Waiter公有派生出SingingWaiter:
+
+```
+class SingingWaiter : public Singer, public Waiter {...};
+```
+
+因为Singer和Waiter都继承了一个Worker组件，因此SingingWaiter将包含两个Worker组件（参见图14.4）。
+
+[![img](https://i.imgur.com/1Y4umCJ.png)](https://i.imgur.com/1Y4umCJ.png)
+
+正如预期的e，这将引起问题。例如，通常可以将派生类对象的地址赋给基类指针，但现在将出现二义性：
+
+```
+SingingWaier ed;
+Worker * pw = &ed; //存在二义性
+```
+
+通常，这种赋值将把基类指针设置为派生对象中的基类对象的地址。但ed中包含两个Worker对象，有两个地址可供选择，所以应使用类型转换来指定对象：
+
+```
+Worker * pw1 = (Waiter *) &ed;
+Worker * pw2 = (Singer *) &ed;
+```
+
+这将使得使用基类指针来引用不同的对象（多态性）复杂化。
+
+包含两个Worker对象拷贝还会导致其他问题。然而，真正的问题是：为什么需要Worker对象的两个拷贝？唱歌的侍者和其他Worker对象一样，也应只有一个姓名和一个ID。C++引入多重继承的同时，引入了一种新技术—**虚基类**，使MI成为可能。
+
+**1. 虚基类**
+
+虚基类使得从多个类（它们的基类相同）派生出的对象只继承一个基类对象。例如，通过在类声明中使用关键字virtual，可以使Worker被用作Singer和Waiter的虚基类（virtual和public的次序无关紧要）：
+
+```
+class Singer : virtual public Worker {};
+class Waiter : public virtual Worker {};
+```
+
+然而，SingingWaiter对象将只包含Worker对象的一个副本。从本质上说，继承的Singer和Waiter对象共享一个Worker对象，而不是各自引入自己的Worker对象副本（参见图14.5）。因为SingingWaiter现在只包含了一个Worker子对象，所可以使用多态。
+
+[![img](https://i.imgur.com/oKeXr0f.png)](https://i.imgur.com/oKeXr0f.png)
+
+您可能会有这样的疑问？
+
+- 为什么使用术语“虚”？
+- 为什么不抛弃将基类声明为虚的这种方法，而使虚行为成为多MI的准则呢？
+- 是否存在麻烦呢？
+
+首先，为什么使用术语虚？毕竟，在虚函数和虚基类之间并不存在明显的联系。C++用户强烈反对引入的新的关键字，因为这将给他们带来很大的压力。例如，如果新的关键字与重要程序的重要函数或变量的名称相同，这将非常麻烦。因此，C++对这种特性也使用关键字virtual—有点像关键字重载。
+
+其次，为什么不抛弃基类声明为虚的这种方式，而使虚行为成为MI的准则呢？第一，在一些情况下，可能需要基类的多个拷贝；第二，将基类作为虚的要求程序完成额外的计算，为不需要的工具付出代价是不应当的；第三，这样做有其缺点，将在下一段介绍。
+
+最后，是否存在麻烦？是的。为使基类能够工作，需要对C++规则进行调整，必须以不同的方式编写一些代码。另外，使用虚基类还可能需要修改已有的代码。例如，将SingingWaiter类添加到Worker继承层次中，需要在Singer和Waiter类中添加关键字vritual。
+
+**2. 新的构造函数规则**
+
+使用虚基类时，需要对类构造函数采用一种新的方法。对于非虚基类，唯一可以出现在初始化列表中的构造函数是即时基类构造函数。但这些构造函数可能需要将信息传递给其基类。例如，可能有下面一组构造函数：
+
+```
+class A
+{
+    int a;
+public:
+    A(int n = 0) : a(n) {}
+    ...
+};
+
+class B : public A
+{
+    int b;
+public:
+    B(int m = 0, int n = 0) : A(n), b(m) {}
+    ...
+};
+
+class C : public B
+{
+    int c;
+    C(int q = 0, int m = 0, int n = 0) : B(m, n), c(q) {}
+    ...
+};
+```
+
+C类的构造函数只能调用B类的构造函数，而B类的构造函数只能调用A类的构造函数。这里，C类的构造函数使用值q，并将值m和n传递给B类的构造函数；而B类的构造函数使用值m，并将值n传递给A类的构造函数。
+
+如果Worker是虚基类，则这种信息自动传递将不起作用。例如，对于下面的MI构造函数：
+
+```
+SingingWaiter(const Worker & wk, int p = 0, int v = Singer::other)
+                : Waiter(wk, p), Singer(wk, v) {}
+```
+
+存在的问题是，自动传递信息时，将通过2条不同的途径（Waiter和Singer）将wk传递给Worker对象。为避免这种冲突，**C++在基类是虚的时，禁止信息通过中间类自动传递给基类。** 因此，上述构造函数将初始化成员panache和voidce，但wk参数中的信息将不会传递给子对象Work。然而，编译器必须在构造派生类对象之前构造基类对象组件；**在上述情况下，编译器将使用Worker的默认构造函数。**
+
+如果不希望默认构造函数来构造虚基类对象，则需要显式地调用所需的基类构造函数。因此，构造函数应该是这样的：
+
+```
+SingingWaiter(const Worker & wk, int p = 0, int v = Singer::other)
+                : Worker(wk), Waiter(wk, p), Singer(wk, v) {}
+```
+
+上述代码将显式地调用构造函数Worker(const Worker &)。请注意，这种用法是合法的，对于虚基类，必须这样做；但对于非虚基类，则是非法的。
+
+**警告：**如果类有间接虚基类，则除非只需使用该虚基类的默认构造函数，否则必须显式地调用该虚基类的某个构造函数。
+
+**14.3.2 哪个方法**
+
+除了修改类构造函数规则外，Mi通常还要调整其他代码。假设要在SingingWaiter类中扩展Show()方法。因为SingingWaiter对象没有新的数据成员，所以可能会认为它只需要使用继承的方法即可。这引出了第一个问题。假设没有在SingingWaiter类中重新定义Show()方法，并试图使用SingWaiter对象调用及继承的Show()方法：
+
+```
+SingingWaiter newhire("Elise Hawks", 2005, 6, soprano);
+newhire.Show(); //存在二义性
+```
+
+对于单继承，如果没有重新定义Show()，则将使用最近祖先中的定义。而在多继承中，每个直接祖先都有一个Show()函数，这使得上述调用是二义性的。
+
+**警告:**多重继承可能可能导致函数调用的二义性。
+
+可以使用作用域解析运算符来澄清编程者的意图：
+
+```
+SingingWaiter newhire("Elise Hawks", 2005, 6, soprano);
+newhire.Singer::Show();
+```
+
+然而，更好的办法是在SingingWaiter中重新定义Show()，并指出使用哪个Show()。例如，如果希望SingingWaiter对象使用Singer版本的Show()，则可以这样做：
+
+```
+void SingingWaiter::Show()
+{
+    Singer::Show();
+}
+```
+
+对于单继承来说，让派生类方法调用基类的方法是可以的。例如，假设HeadWaiter类是从Waiter类派生而来的，则可以使用下面的定义序列，其中每个派生类使用其基类显示信息，并添加自己的信息：
+
+```
+void Worker::Show() const
+{
+    cout << "Name: " << fullname << endl;
+    cout << "Employee ID: " << id << endl;
+}
+
+
+void Waiter::Show() const
+{
+    Worker::Show();
+    cout << "Panache rating: " << panache << endl;
+}
+
+void HeadWaiter::Show() const
+{
+    Waiter::Show();
+    cout << "Presence rating: " << presence << endl;
+}
+```
+
+然而，这种递增的方式对SingingWaiter示例无效。下面的方法将无效，因为它忽略了Waiter组件：
+
+```
+void SingingWaiter::Show()
+{
+    Singer::Show();
+}
+```
+
+可以通过同时调用Waiter版本的Show()来补救：
+
+```
+void SingingWaiter::Show()
+{
+    Singer::Show();
+    Waiter::Show();
+}
+```
+
+然而，这显示姓名和ID两次，因此Singer::Show()和Waiter::Show()都调用了Worker::Show()。
+
+一种办法是使用模块化方式，而不是递增方法，即提供一个只显示Worker组件的方法和一个只显示Waiter组件和Singer组件（而不是Waiter和Worker组件）的方法。然而，在SingingWaiter::Show()方avs将组件组合起来。例如，可以这样做：
+
+```
+void Worker::Data() const
+{
+    cout << "Name: " << fullname << endl;
+    cout << "Employee ID: " << id << endl;
+}
+void Waiter::Data() const
+{
+    cout << "Panache rating: " << panache << endl;
+}
+void Singer::Data() const
+{
+    cout << "Vocal range: " << pv[voice] << endl;
+}
+
+void SingingWaiter::Show() const
+{
+    cout << "Category: singing waiter\n";
+    Worker::Data();
+    Data();
+}
+```
+
+与此相似，其他Show()方法可以组合适当的Data()组件。
+
+采用这种方式，对象仍可以使用Show()方法。而Data()方法只在类内部可用，作为协助公有接口的辅助方法。然而，使Data()方法成为私有的将阻止Waiter中的代码使用Worker::Data()，这正是保护访问类的用武之地。如果Data()方法是保护的，则只能在继承层次结构中的类中使用它，在其他地方则不能使用。
+
+另一种方法是将所有的数据组件都设置为保护的，而不是私有的，不过使用保护方法（而不是保护数据）将可以更严格地控制对数据的访问。
+
+Set()方法取得数据，以设置对象值，该方法也有类似的问题。例如，SingingWaiter::Set()应请求Worker信息一次，而不是两次。对此，可以使用前面的解决办法。可以提供一个受保护的Get()方法，该方法只请求一个类的信息，然后将使用Get()方法作为构造块的Set()方法来集合起来。
+
+总之，在祖先相同时，使用MI必须引入虚基类，并修改构造函数初始化列表的规则。另外，如果在编写这些类时没有考虑到MI，则还可能需要重新编写他们。程序14.10列出了修改后的类声明。
+
+程序14.10 workermi.h
+
+```
+#ifndef WORKERMI_H_
+#define WORKERMI_H_
+
+#include <string>
+using namespace std;
+
+class Worker
+{
+private:
+    string fullname;
+    long id;
+protected:
+    virtual void Data() const;
+    virtual void Get();
+public:
+    Worker() : fullname("no one"), id(0L) {}
+    Worker(const string & s, long n) : fullname(s), id(n) {}
+    virtual ~Worker() = 0;
+    virtual void Show() const = 0;
+    virtual void Set() = 0;
+};
+
+class Waiter :  virtual public Worker
+{
+private:
+    int panache;
+protected:
+    void Data() const;
+    void Get();
+public:
+    Waiter() : Worker(), panache(0) {}
+    Waiter(const string & s, long n, int p = 0)
+         : Worker(s, n), panache(p) {}
+    Waiter(const Worker & wk, int p = 0)
+         : Worker(wk), panache(p) {}
+    void Set();
+    void Show() const;
+};
+
+class Singer : virtual public Worker
+{
+protected:
+    enum {other, alto, contralto, soprano, 
+            bass, baritone, tenor};
+    enum {Vtypes = 7};
+    void Data() const;
+    void Get();
+private:
+    static char *pv[Vtypes];
+    int voice;
+public:
+    Singer() : Worker(), voice(0) {}
+    Singer(const string & s, long n, int v = other)
+         : Worker(s, n), voice(v) {}
+    Singer(const Worker & wk, int v = other)
+         : Worker(wk), voice(v) {}
+    void Show() const;
+    void Set();
+};
+
+class SingingWaiter : public Waiter, public Singer
+{
+protected:
+    void Data() const;
+    void Get();
+public:
+    SingingWaiter() {}
+    SingingWaiter(const string & s, long n, int p = 0,
+            int v = other)
+        : Worker(s, n), Waiter(s, n, p), Singer(s, n, v) {}
+    SingingWaiter(const Worker & wk, int p = 0, int v = other)
+        : Worker(wk), Waiter(wk, p), Singer(wk, v) {}
+    SingingWaiter(const Waiter & wt, int v = other)
+        : Worker(wt), Waiter(wt), Singer(wt, v) {}
+    SingingWaiter(const Singer & wt, int p = 0)
+        : Worker(wt), Waiter(wt, p), Singer(wt) {}
+    void Set();
+    void Show() const;
+};
+
+#endif
+```
+
+程序14.11 workermi.cpp
+
+```
+#include <iostream>
+#include "workermi.h"
+using namespace std;
+
+Worker::~Worker() {}
+
+void Worker::Data() const
+{
+    cout << "Name: " << fullname << endl;
+    cout << "Employee ID: " << id << endl;
+}
+
+void Worker::Get()
+{
+    getline(cin, fullname);
+    cout << "Enter worker;s ID: ";
+    cin >> id;
+    while (cin.get() != '\n')
+        continue;
+}
+
+void Waiter::Set()
+{
+    cout << "Enter waiter's name: ";
+    Worker::Get();
+    Get();
+}
+
+void Waiter::Show() const
+{
+    cout << "Category: waiter\n";
+    Worker::Data();
+    Data();
+}
+
+void Waiter::Data() const
+{
+    cout << "Panache rating: " << panache << endl;
+}
+
+void Waiter::Get() 
+{
+    cout << "Enter waiter's panache rating: ";
+    cin >> panache;
+    while (cin.get() != '\n')
+        continue;
+}
+
+char * Singer::pv[Singer::Vtypes] = {"ohter", "alto", "contralto", 
+            "soprano", "brass", "baritone", "tenor"};
+
+void Singer::Set()
+{
+    cout << "Enter singer's name: ";
+    Worker::Get();
+    Get();
+}
+
+void Singer::Show() const
+{
+    cout << "Category: singer\n";
+    Worker::Data();
+    Data();
+}
+
+void Singer::Data() const
+{
+    cout << "Vocal range: " << pv[voice] << endl;
+}
+
+void Singer::Get() 
+{
+    cout << "Enter number for singer's vocal range:\n";
+    int i;
+    for (i = 0; i < Vtypes; i++)
+    {
+        cout << i << ": " << pv[i] << " ";
+        if (i % 4 == 3)
+            cout << endl;
+    }
+    if (i % 4 != 0)
+        cout << endl;
+    while (cin >> voice && (voice < 0 || voice >= Vtypes) )
+        cout << "Please enter avalue >= 0 and < " << Vtypes << endl;
+    while (cin.get() != '\n')
+        continue;
+}
+
+void SingingWaiter::Data() const
+{
+    Singer::Data();
+    Waiter::Data();
+}
+
+void SingingWaiter::Get() 
+{
+    Singer::Get();
+    Singer::Get();
+}
+
+void SingingWaiter::Show() const
+{
+    cout<< "Category: singing waiter\n";
+    Worker::Data();
+    Data();
+}
+
+void SingingWaiter::Set()
+{
+    cout << "Enter singing waiter's name: ";
+    Worker::Get();
+    Get();
+}
+```
+
+程序14.12提供了测试代码。注意，该程序使用了多态属性，将各种类型的地址赋给基类指针。另外，该程序还在下面的检测中使用了C-风格字符串库函数strchr():
+
+```
+while (strchr("wstq", choice) == NULL)
+```
+
+该函数返回参数choice指定的字符在字符串“wstq”中第一次出现的地址，如果没有这和的字符，则返回NULL地址。十三亿这种检测比使用if语句将choice指定的字符同每个字符进行比较简单。
+
+程序14.12 workmi.cpp
+
+```
+#include "workermi.h"
+#include <iostream>
+#include <cstring>
+using namespace std;
+const int SIZE = 5;
+
+int main()
+{
+    Worker * lolas[SIZE];
+    int ct;
+    for (ct = 0; ct < SIZE; ct++)
+    {
+        char choice;
+        cout << "Enter the employee category:\n"
+             << "W: waiter  s: singer "
+             << "t: singing waiter   q: quit\n";
+        cin >> choice;
+        while(strchr("wstq", choice) == NULL)
+        {
+            cout << "Please enter a w, s, t or q:";
+            cin >> choice;
+        }
+        if (choice == 'q')
+            break;
+        switch(choice)
+        {
+            case 'w':
+                lolas[ct] = new Waiter;
+                break;
+            case 's':
+                lolas[ct] = new Singer;
+                break;
+            case 't':
+                lolas[ct] = new SingingWaiter;        
+                break;
+        }
+        cin.get();
+        lolas[ct]->Set();
+    }
+
+    cout << "\nHere is your staff:\n";
+    int i;
+    for (i = 0; i < ct; i++)
+    {
+        cout << endl;
+        lolas[i]->Show();
+    }
+    for (i = 0; i < ct; i++)
+        delete lolas[i];
+    cout << "Bye.\n";
+    return 0;
+}
+```
+
+输出：
+
+```
+Enter the employee category:
+W: waiter  s: singer t: singing waiter   q: quit
+w
+Enter waiter's name: Wally Slipshod
+Enter worker;s ID: 1040
+Enter waiter's panache rating: 4
+Enter the employee category:
+W: waiter  s: singer t: singing waiter   q: quit
+s
+Enter singer's name: Sinclair Parma
+Enter worker;s ID: 1044
+Enter number for singer's vocal range:
+0: ohter 1: alto 2: contralto 3: soprano 
+4: brass 5: baritone 6: tenor 
+5
+Enter the employee category:
+W: waiter  s: singer t: singing waiter   q: quit
+t
+Enter singing waiter's name: Natasha Bargalova
+Enter worker;s ID: 1021
+Enter number for singer's vocal range:
+0: ohter 1: alto 2: contralto 3: soprano 
+4: brass 5: baritone 6: tenor 
+6
+Enter number for singer's vocal range:
+0: ohter 1: alto 2: contralto 3: soprano 
+4: brass 5: baritone 6: tenor 
+3
+Enter the employee category:
+W: waiter  s: singer t: singing waiter   q: quit
+q
+
+Here is your staff:
+
+Category: waiter
+Name: Wally Slipshod
+Employee ID: 1040
+Panache rating: 4
+
+Category: singer
+Name: Sinclair Parma
+Employee ID: 1044
+Vocal range: baritone
+
+Category: singing waiter
+Name: Natasha Bargalova
+Employee ID: 1021
+Vocal range: soprano
+Panache rating: 0
+Bye.
+```
+
+下面介绍其他一些有关MI的问题。
+
+**1. 混合使用虚基类和非虚基类**
+
+再来看一下通过多种途径继承一个基类的派生类的情况。如果基类是虚基类，派生类将包含基类的一个子对象；如果基类不是虚基类，派生类将包含多个子对象。当虚基类和非虚基类混合时，情况将如何呢？
+
+例如，假设类B被用作类C和D的虚基类，同时用作类X和Y的非虚基类，而类M从C、D、X和Y中派生而来。在这种情况下，类M从虚派生祖先(即类C和D)那里共继承了一个B类子对象，并从每一个非虚派生祖先（即类X和Y）分别继承了一个B类子对象。因此，它包含三个B类子对象。当类通过多条虚途径和非虚途径继承某个特定的基类时，该类将包含一个表示所有的虚途径的基类子对象和分别表示个条非虚途径的多个基类子对象。
+
+**2. 虚基类和支配**
+
+使用虚基类将改变C++解析二义性的方式。使用非虚基类时，规则很简单。如果类从不同的类那里继承了两个或更多的同名成员(数据或方法)，则使用该成员名时，如果没有用类名进行限定，将导致二义性。但如果使用的是虚基类，则这样做不一定会导致二义性。在这种情况下，如果某个名称优先于其他所有名称，则使用它，即便不使用限定符，也不会导致二义性。
+
+那么，一个成员如何优先于另一个成员呢？在派生类中的名称优先于直接或间接祖先类中的相同名称。例如，在下面的定义中：
+
+```
+class B    
+{
+public:
+    short q();
+...
+};
+
+class C : virtual public B
+{
+public:
+    long q();
+    int omg();
+    ...
+};
+
+class D : public C
+{
+    ...
+};
+
+class E : virtual public B
+{
+private:
+    int omg();
+    ...
+};
+
+class F : public D, public E
+{
+    ...
+};
+```
+
+类C中的q()定义优先于B中的q()定义，因为类C是从类B派生而来的。因此，F中的方法可以使用q()来表示C::q()。另一方面，任何一个omg()定义都不优先于其他omg()定义。因为C和E都不是对象的基类。所以，在F中使用非限定的omg()将导致二义性。
+
+虚二义性规则与访问规则无法，也就是说，即使E::omg()是私有的，不能再F类中直接访问，但使用omg()仍将导致二义性。同样，即使C::q()是私有的，它也将优先于D::q()。在这种情况下，可以在类F中调用B::q()，但如果不限定q()，则将意味者调用不可访问的C::q()。
+
+### 14.3.3 MI小结
+
+首先复习一下不使用虚基类的MI。这种形式的MI不会引入新的规则。然后，如果一个类从两个不同的类哪里继承了两个同名的成员，则需要在派生类中使用类限定符来区分它们。即在从GunSlinger和PokerPlayer派生而来的BadDude类中，将分别使用Gunslinger::draw()和PokerPlayer::draw()来区分从两个类那里继承的draw()方法。否则，编译器将指出二义性。
+
+如果一个类通过多种途径继承了一个非虚基类，则该类从每种途径分别继承非虚基类的一个实例。在某些情况下，这可能正是所希望的，但通常情况下，多个基类实例都是问题。
+
+接下来看一看使用虚基类的MI。当派生类使用关键字virtual来指示派生时，基类就成为虚基类：
+
+```
+class marketing : public virtual reality {...};
+```
+
+主要变化（同时也是使用虚基类的原因）是，从虚基类的一个或多个实例派生而来的类将只继承了一个基类对象。为实现这种特性，必须满足其他要求：
+
+- 有间接虚基类的派生类包含直接调用间接基类构造函数的构造函数，这对于间接非虚函数来说是非法的；
+- 通过有线规则解决名称二义性。
+
+正如您看到的，MI会增加编程的复杂程度。然而，这种复杂主要是由于派生类通过多态途径继承同一个基类引起的。避免这种情况后，唯一需要注意的是，在必要时对继承的名称进行限定。
+
 ## 14.4 类模板
 
 **相关章节**：本章相关章节为第4章的模板类`vector`和`array`、第10章的Stack实例、第12章的Queue实例、第16章的C++标准库模板库（STL)提供了几个功能强大而灵活的容器模板实现。
