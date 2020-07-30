@@ -5,10 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "(gdb) example1_test",
+      "name": "(gdb) use_tv",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/example1_test",
+      "program": "${workspaceFolder}/build/use_tv",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) exercise1_test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exercise1_test",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
