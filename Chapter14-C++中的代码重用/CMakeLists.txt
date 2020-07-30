@@ -25,6 +25,10 @@ add_executable(tempmemb ./tempmemb.cpp)
 add_executable(tempparm ./tempparm.cpp)
 add_executable(frnd2tmp ./frnd2tmp.cpp)
 
+add_executable(exa7_3 ./exa7_3.cpp)
+add_executable(exa8_4 ./exa8_4.cpp)
+add_executable(exa8_5 ./exa8_5.cpp)
+
 # 添加子目录
 add_subdirectory(example1)
 add_subdirectory(example1_2)

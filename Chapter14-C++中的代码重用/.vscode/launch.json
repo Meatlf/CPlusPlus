@@ -180,5 +180,53 @@
         }
       ]
     },
+    {
+      "name": "(gdb) exa7_3",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exa7_3",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) exa8_4",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exa8_4",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) exa8_5",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exa8_5",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
   ]
 }

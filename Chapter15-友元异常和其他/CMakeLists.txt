@@ -12,6 +12,7 @@ include_directories("${PROJECT_SOURCE_DIR}/example1")
 include_directories("${PROJECT_SOURCE_DIR}/exercise1")
 
 add_executable(use_tv ./use_tv.cpp)
+add_executable(nested ./nested.cpp)
 add_executable(exercise1_test ./exercise1.cpp)
 add_executable(error1 ./error1.cpp)
 add_executable(error3 ./error3.cpp)
