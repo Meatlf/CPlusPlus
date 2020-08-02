@@ -1,4 +1,5 @@
 // queuetp.h -- queue template with a nested class
+// 说明：和类模板一样，该头文件也包含类模板和方法函数模板
 #ifndef QUEUETP_H_
 #define QUEUETP_H_
 
@@ -11,7 +12,9 @@ private:
         Q_SIZE = 10
     };
     // Node is a nested class definition
-    // Node类在QueueTP类中的私有部分声明的，因此只有QueueTP类知道Node类
+    // 说明：
+    // 1）从此处就可以发现此类就是嵌套类
+    // 2）Node类在QueueTP类中的私有部分声明的，因此只有QueueTP类知道Node类
     class Node
     {
     public:
@@ -66,6 +69,7 @@ QueueTP<Item>::~QueueTP()
 }
 
 // Add item to queue
+// 该方法创建了Node对象
 template <class Item>
 bool QueueTP<Item>::enqueue(const Item &item)
 {

@@ -148,6 +148,53 @@
         }
       ]
     },
+    {
+      "name": "(gdb) 12_1",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/12_1",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) 12_2",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/12_2",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) 12_3",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/12_3",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
   ]
-]
 }
