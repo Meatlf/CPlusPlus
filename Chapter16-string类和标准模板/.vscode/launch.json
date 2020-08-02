@@ -5,6 +5,54 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "(gdb) str1",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/str1",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) strfile",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/strfile",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) hangman",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/hangman",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
       "name": "(gdb) smrtptrs",
       "type": "cppdbg",
       "request": "launch",
@@ -20,12 +68,11 @@
         }
       ]
     },
-
     {
-      "name": "(gdb) error1",
+      "name": "(gdb) fowl",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/error1",
+      "program": "${workspaceFolder}/build/fowl",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -37,7 +84,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) error3",
       "type": "cppdbg",
@@ -54,7 +100,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) error4",
       "type": "cppdbg",
@@ -71,7 +116,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) error5",
       "type": "cppdbg",
@@ -88,8 +132,6 @@
         }
       ]
     },
-
-
     {
       "name": "(gdb) tempmemb",
       "type": "cppdbg",
@@ -106,7 +148,6 @@
         }
       ]
     },
-
     {
       "name": "(gdb) tempparm",
       "type": "cppdbg",
@@ -123,6 +164,22 @@
         }
       ]
     },
-  ]
+    {
+      "name": "(gdb) str2",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/str2",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+
   ]
 }
