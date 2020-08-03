@@ -16,6 +16,9 @@ add_executable(hangman ./hangman.cpp)
 add_executable(str2 ./str2.cpp)
 add_executable(smrtptrs ./smrtptrs.cpp)
 add_executable(fowl ./fowl.cpp)
+add_executable(vect1 ./vect1.cpp)
+add_executable(vect2 ./vect2.cpp)
+add_executable(vect3 ./vect3.cpp)
 
 # 添加子目录
 # add_subdirectory(example1)

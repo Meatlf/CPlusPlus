@@ -85,10 +85,10 @@
       ]
     },
     {
-      "name": "(gdb) error3",
+      "name": "(gdb) vect1",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/error3",
+      "program": "${workspaceFolder}/build/vect1",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -101,10 +101,10 @@
       ]
     },
     {
-      "name": "(gdb) error4",
+      "name": "(gdb) vect2",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/error4",
+      "program": "${workspaceFolder}/build/vect2",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",
@@ -117,10 +117,10 @@
       ]
     },
     {
-      "name": "(gdb) error5",
+      "name": "(gdb) vect3",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/error5",
+      "program": "${workspaceFolder}/build/vect3",
       //"processId": "${command:pickProcess}",
       "cwd": "${workspaceRoot}",
       "MIMode": "gdb",

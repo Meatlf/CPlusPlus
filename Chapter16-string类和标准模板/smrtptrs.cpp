@@ -7,6 +7,7 @@ class Report
 {
 private:
     std::string str;
+
 public:
     Report(const std::string s) : str(s) { std::cout << "Object created!\n"; }
     ~Report() { std::cout << "Object deleted!\n"; }
@@ -16,17 +17,19 @@ public:
 int main()
 {
     {
-        std::auto_ptr<Report> ps (new Report("using auto_ptr"));
-        ps->comment();   // use -> to invoke a member function
+        // new Report("using auto_ptr")是new返回的指针，指向新分配的内存块，
+        // 它是构造函数auto_ptr<Report>的参数
+        std::auto_ptr<Report> ps(new Report("using auto_ptr"));
+        ps->comment(); // use -> to invoke a member function
     }
     {
-        std::shared_ptr<Report> ps (new Report("using shared_ptr"));
+        std::shared_ptr<Report> ps(new Report("using shared_ptr"));
         ps->comment();
     }
     {
-        std::unique_ptr<Report> ps (new Report("using unique_ptr"));
+        std::unique_ptr<Report> ps(new Report("using unique_ptr"));
         ps->comment();
     }
-    // std::cin.get();  
+    // std::cin.get();
     return 0;
 }

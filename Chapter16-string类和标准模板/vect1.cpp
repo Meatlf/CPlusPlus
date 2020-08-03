@@ -6,12 +6,13 @@
 const int NUM = 5;
 int main()
 {
-    using std::vector;
-    using std::string;
     using std::cin;
     using std::cout;
     using std::endl;
+    using std::string;
+    using std::vector;
 
+    // 创建vector对象，需要提供类型和大小
     vector<int> ratings(NUM);
     vector<string> titles(NUM);
     cout << "You will do exactly as told. You will enter\n"
@@ -20,18 +21,19 @@ int main()
     for (i = 0; i < NUM; i++)
     {
         cout << "Enter title #" << i + 1 << ": ";
-        getline(cin,titles[i]);
+        // 使用[]运算符来访问vector元素
+        getline(cin, titles[i]);
         cout << "Enter your rating (0-10): ";
         cin >> ratings[i];
         cin.get();
     }
     cout << "Thank you. You entered the following:\n"
-          << "Rating\tBook\n";
+         << "Rating\tBook\n";
     for (i = 0; i < NUM; i++)
     {
         cout << ratings[i] << "\t" << titles[i] << endl;
     }
     // cin.get();
 
-    return 0; 
+    return 0;
 }
