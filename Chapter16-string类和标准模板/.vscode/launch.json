@@ -180,6 +180,21 @@
         }
       ]
     },
-
+    {
+      "name": "(gdb) exa10_1",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/exa10_1",
+      //"processId": "${command:pickProcess}",
+      "cwd": "${workspaceRoot}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
   ]
 }
