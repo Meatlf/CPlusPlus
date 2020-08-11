@@ -1662,7 +1662,7 @@ iterator find_ar(iterator begin, iterator end, const double & val)
 }
 ```
 
-对于find_ll()函数，可以定义一个迭代器类，其中定义了运算符*[Math Processing Error]∗*和++：
+对于find_ll()函数，可以定义一个迭代器类，其中定义了运算符*∗*和++：
 
 ```
 struct Node 
