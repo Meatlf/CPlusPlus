@@ -35,11 +35,15 @@ A:[初学c++ VS code + CMake 编译调试helloWord](https://blog.csdn.net/u01426
 ## 参考资料
 [1] [Bjarne Stroustrup's homepage](http://www.research.att.com/-bs/)
 
-[2] [C++ Primer Plus学习笔记](https://www.zxpblog.cn/categories/C-Primer-Plus%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/page/2/)
+[2] 《C++ Primer Plus》第6版 中文版
 
-[3] [Cpp-Primer-Plus PyLab github 课后习题答案](https://github.com/PytLab/Cpp-Primer-Plus)
+[3] [C++官方源码地址](https://github.com/MrHeer/C-Primer-Plus-Source-Code)
 
-[4] [C++语言程序设计基础](https://next.xuetangx.com/course/THU08091000247/1515741?fromArray=learn_title)
+[4] [C++ Primer Plus学习笔记](https://www.zxpblog.cn/categories/C-Primer-Plus%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/page/2/)
 
-[5] [C++语言程序设计进阶](https://next.xuetangx.com/course/THU08091000248/1510503?fromArray=search_result)
+[5] [Cpp-Primer-Plus PyLab github 课后习题答案](https://github.com/PytLab/Cpp-Primer-Plus)
+
+[6] [C++语言程序设计基础](https://next.xuetangx.com/course/THU08091000247/1515741?fromArray=learn_title)
+
+[7] [C++语言程序设计进阶](https://next.xuetangx.com/course/THU08091000248/1510503?fromArray=search_result)
 
