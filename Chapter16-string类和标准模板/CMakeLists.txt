@@ -19,6 +19,7 @@ add_executable(fowl ./fowl.cpp)
 add_executable(vect1 ./vect1.cpp)
 add_executable(vect2 ./vect2.cpp)
 add_executable(vect3 ./vect3.cpp)
+add_executable(copyit ./copyit.cpp)
 add_executable(exa10_1 ./exa10_1.cpp)
 
 # 添加子目录
