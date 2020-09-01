@@ -76,6 +76,7 @@ int main()
     int ecCodewords = 50;
     ECB ecb1(2, 6);
     ECB ecb2(3, 7);
+    // 可以将vpecb看作数组名，数组中的每个元素为指向ECB对象的指针
     std::vector<ECB *> vpecb(2);
     vpecb[0] = &ecb1;
     vpecb[1] = &ecb2;
